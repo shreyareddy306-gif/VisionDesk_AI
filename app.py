@@ -305,7 +305,8 @@ if CV_AVAILABLE:
         if os.path.exists(model_path):
             try:
                 model = YOLO(model_path)
-                print("✅ Custom PPE model loaded successfully")
+                print("✅ Custom PPE model loaded successfully!")
+                print(f"🔍 Custom Model Classes: {model.names}")
             except Exception as e:
                 print(f"⚠️ Could not load custom model: {e}")
                 try:
@@ -315,11 +316,9 @@ if CV_AVAILABLE:
                     print(f"⚠️ Could not load base model: {e2}")
                     model = None
         else:
-            # Try to download a model
             try:
-                print("📥 No model found, trying to download...")
+                print("📥 No custom model found, downloading base model...")
                 model = YOLO('yolov8n.pt')
-                # Save it for future use
                 model.save(model_path)
                 print("✅ Model downloaded and saved")
             except Exception as e:
@@ -330,7 +329,7 @@ if CV_AVAILABLE:
         print(f"⚠️ YOLO initialization error: {e}")
         model = None
 
-# Create a dummy model if real model failed
+# Dummy Model Fallback
 if model is None:
     class DummyModel:
         def __call__(self, *args, **kwargs):
@@ -414,7 +413,6 @@ def extract_safety_keywords(text):
 def extract_metadata(text):
     metadata = {}
     
-    # Dates
     date_patterns = [
         r'\b\d{4}-\d{2}-\d{2}\b',
         r'\b\d{2}/\d{2}/\d{4}\b',
@@ -426,15 +424,12 @@ def extract_metadata(text):
         dates.extend(re.findall(pattern, text))
     metadata['dates'] = list(set(dates))[:10]
     
-    # Numbers
     numbers = re.findall(r'\b\d+\b', text)
     metadata['numbers'] = numbers[:20]
     
-    # Capitalized phrases
     capitalized = re.findall(r'\b[A-Z][A-Z\s]{2,}\b', text)
     metadata['important_phrases'] = list(set(capitalized))[:10]
     
-    # Sections
     section_patterns = [
         r'(?i)section\s+\d+\.?\d*',
         r'(?i)chapter\s+\d+',
@@ -469,7 +464,6 @@ def process_document(file_path, filename):
     safety_keywords = extract_safety_keywords(text)
     metadata = extract_metadata(text)
     
-    # Create chunks for RAG
     chunks = [text[i:i+500] for i in range(0, min(len(text), 5000), 500)]
     
     knowledge_entry = {
@@ -495,7 +489,6 @@ def search_knowledge_base(query, search_type='full_text'):
     results = []
     query_lower = query.lower()
     
-    # Search in MongoDB
     if knowledge_col is not None:
         for doc in knowledge_col.find():
             if search_type == 'full_text':
@@ -529,7 +522,6 @@ def search_knowledge_base(query, search_type='full_text'):
                             })
                             break
     
-    # Search in-memory fallback
     elif STORAGE['knowledge']:
         for doc in STORAGE['knowledge']:
             if search_type == 'full_text':
@@ -570,52 +562,13 @@ class DummyRAG:
 
 class DummyAgent:
     def process_query(self, query, user):
-        query_lower = query.lower()
-        
-        if 'zone' in query_lower:
-            response = "📊 **Zone Investigation Results:**\n\nNo zone records found. Upload media to start zone analysis."
-        elif 'violation' in query_lower or 'violations' in query_lower:
-            response = "🚨 **Violation Report:**\n\nNo unresolved violations found. All clear!"
-        elif 'ppe' in query_lower:
-            response = "🛡️ **PPE Compliance:**\n\nNo PPE data available. Upload images/videos for PPE detection."
-        elif 'document' in query_lower or 'documents' in query_lower:
-            response = "📖 **Documents:**\n\nNo documents found. Upload documents to build your knowledge base."
-        elif 'analytics' in query_lower or 'statistics' in query_lower or 'stats' in query_lower:
-            response = "📊 **Analytics:**\n\nNo data available. Start by uploading media for detection."
-        elif 'alert' in query_lower or 'alerts' in query_lower:
-            response = "🔔 **Alerts:**\n\nNo active alerts. Everything is running smoothly!"
-        elif 'recommend' in query_lower or 'suggest' in query_lower:
-            response = "💡 **Recommendations:**\n\n1. Upload media for PPE detection\n2. Add documents to knowledge base\n3. Review safety compliance regularly"
-        elif 'hello' in query_lower or 'hi' in query_lower or 'hey' in query_lower:
-            response = f"👋 Hello {user}! I'm your VisionDesk AI assistant. How can I help you today?"
-        elif 'help' in query_lower:
-            response = """🤖 **VisionDesk AI Assistant - Help**
-
-I can help you with:
-
-📊 **Analytics** - View safety statistics and compliance rates
-🚨 **Alerts** - Check for safety violations and incidents
-📖 **Documents** - Search through uploaded documents
-🛡️ **PPE** - Analyze PPE compliance from images/videos
-💡 **Recommendations** - Get safety improvement suggestions
-📋 **Reports** - Generate compliance reports
-
-Try asking:
-- "Show me compliance statistics"
-- "Any violations?"
-- "What documents do I have?"
-- "How can I improve safety?" """
-        else:
-            response = f"🤖 I understand you're asking about: '{query}'\n\nI can help with:\n- 📊 Analytics & Statistics\n- 🚨 Alerts & Violations\n- 📖 Documents & Knowledge\n- 🛡️ PPE Compliance\n- 💡 Recommendations\n\nPlease ask a specific question or check the Help option."
-        
         return {
-            'response': response,
+            'response': f"Hello {user}! Visual analysis and safety query systems are active.",
             'query': query,
             'action': 'general_query',
             'tool_results': [{'type': 'response', 'status': 'success'}]
         }
 
-# Try to import real RAG and Agent
 try:
     from rag_system import rag_system
     print("✅ RAG System loaded")
@@ -642,37 +595,28 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    # Get records
+    username = session.get('username')
     if records_col is not None:
-        records = list(records_col.find(
-            {'uploaded_by': session.get('username')}
-        ).sort('_id', -1).limit(50))
+        records = list(records_col.find({'uploaded_by': username}).sort('_id', -1).limit(50))
     else:
-        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == session.get('username')][:50]
+        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == username][:50]
     
-    # Get documents
     if documents_col is not None:
-        documents = list(documents_col.find(
-            {'uploaded_by': session.get('username')}
-        ).sort('_id', -1).limit(10))
+        documents = list(documents_col.find({'uploaded_by': username}).sort('_id', -1).limit(10))
     else:
-        documents = [d for d in STORAGE['documents'] if d.get('uploaded_by') == session.get('username')][:10]
+        documents = [d for d in STORAGE['documents'] if d.get('uploaded_by') == username][:10]
     
-    # Get alerts
     if records_col is not None:
-        alerts = list(records_col.find({
-            'uploaded_by': session.get('username'),
-            'status': 'VIOLATION DETECTED'
-        }).sort('_id', -1).limit(10))
+        alerts = list(records_col.find({'uploaded_by': username, 'status': 'VIOLATION DETECTED'}).sort('_id', -1).limit(10))
     else:
-        alerts = [r for r in STORAGE['records'] if r.get('status') == 'VIOLATION DETECTED'][:10]
+        alerts = [r for r in STORAGE['records'] if r.get('uploaded_by') == username and r.get('status') == 'VIOLATION DETECTED'][:10]
     
     return render_template('dashboard.html',
-                         user=session.get('username', 'User'),
-                         role=session.get('role', 'Operator'),
-                         data=records,
-                         documents=documents,
-                         alerts=alerts)
+                           user=username,
+                           role=session.get('role', 'Operator'),
+                           data=records,
+                           documents=documents,
+                           alerts=alerts)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -773,7 +717,7 @@ def live_detection():
     return render_template('live_detection.html', user=session.get('username'), role=session.get('role'))
 
 # ============================================
-# UPLOAD FEED ROUTE - WITH MASK DETECTION FIX
+# UPLOAD FEED ROUTE - DYNAMIC PPE PARSING
 # ============================================
 
 @app.route('/upload-feed', methods=['GET', 'POST'])
@@ -803,37 +747,7 @@ def upload_feed():
     rendered_name = 'processed_' + filename
     save_destination = os.path.join(RESULT_FOLDER, rendered_name)
 
-    # ============================================
-    # ENHANCED PPE MAPPING WITH MASK DETECTION
-    # ============================================
-    
-    # Complete mapping for all PPE classes
-    ppe_mapping = {
-        # Person classes
-        'person': 'person', 'people': 'person', 'worker': 'person', 'human': 'person',
-        'man': 'person', 'woman': 'person', 'individual': 'person',
-        
-        # Helmet classes
-        'hardhat': 'helmet', 'helmet': 'helmet', 'head': 'helmet', 
-        'hat': 'helmet', 'safety helmet': 'helmet', 'construction helmet': 'helmet',
-        
-        # Vest classes
-        'vest': 'vest', 'safety vest': 'vest', 'jacket': 'vest', 
-        'hi-vis': 'vest', 'high visibility': 'vest', 'reflective': 'vest',
-        'reflective vest': 'vest', 'safety jacket': 'vest',
-        
-        # Mask classes - EXPANDED
-        'mask': 'mask', 'facemask': 'mask', 'face mask': 'mask', 
-        'respirator': 'mask', 'n95': 'mask', 'surgical': 'mask',
-        'surgical mask': 'mask', 'face_cover': 'mask', 'mouth': 'mask', 
-        'nose': 'mask', 'ppe_mask': 'mask', 'dust mask': 'mask', 
-        'cloth mask': 'mask', 'medical mask': 'mask', 'filter mask': 'mask',
-        'protection mask': 'mask', 'safety mask': 'mask'
-    }
-
     is_video = filename.lower().endswith(('.mp4', '.avi', '.mov', '.webm'))
-    
-    # Check if we have a real model
     is_real_model = hasattr(model, 'predict') or type(model).__name__ != 'DummyModel'
     
     if is_video and CV_AVAILABLE and is_real_model:
@@ -862,64 +776,39 @@ def upload_feed():
                 
                 if frame_count % 3 == 0:
                     try:
-                        # Lower confidence threshold for better mask detection
-                        results = model(frame, conf=0.15, iou=0.45, imgsz=640)
-                        
-                        # Debug: Print detected classes periodically
-                        if frame_count % 30 == 0:
-                            detected_classes = []
-                            for box in results[0].boxes:
-                                tag_class = model.names[int(box.cls[0])]
-                                detected_classes.append(tag_class)
-                            if detected_classes:
-                                print(f"🔍 Detected classes: {set(detected_classes)}")
+                        # Update the video frame model call as well:
+                        results = model(frame, 
+                            conf=0.45, 
+                            iou=0.50, 
+                            agnostic_nms=True, 
+                            imgsz=640
+                        )
+    
                         
                         for box in results[0].boxes:
-                            tag_class = model.names[int(box.cls[0])]
-                            tag_lower = tag_class.lower().strip()
+                            class_id = int(box.cls[0])
+                            raw_name = model.names.get(class_id, '').lower().replace('-', ' ').replace('_', ' ').strip()
                             confidence = float(box.conf[0])
                             
-                            # Get coordinates for unique ID
+                            if raw_name.startswith('no ') or 'without' in raw_name or confidence < 0.45:
+                                continue
+                            
                             x1, y1, x2, y2 = box.xyxy[0].tolist()
                             box_id = f"{int(x1)},{int(y1)},{int(x2)},{int(y2)}"
                             
-                            # Map to PPE categories
-                            mapped = None
-                            for key, value in ppe_mapping.items():
-                                if key in tag_lower:
-                                    mapped = value
-                                    break
-                            
-                            # Special handling for mask - check if any mask-related term appears
-                            if mapped is None:
-                                mask_terms = ['mask', 'face', 'respirator', 'n95', 'surgical', 'mouth', 'nose', 'filter']
-                                if any(term in tag_lower for term in mask_terms):
-                                    mapped = 'mask'
-                            
-                            # If still None, check if it's a person
-                            if mapped is None:
-                                person_terms = ['person', 'people', 'worker', 'human', 'man', 'woman', 'individual']
-                                if any(term in tag_lower for term in person_terms):
-                                    mapped = 'person'
-                            
-                            # Categorize with confidence threshold
-                            if mapped == 'person' and confidence > 0.2:
-                                detections['workers'].add(box_id)
-                                print(f"👤 Worker detected: {confidence:.2f}")
-                            elif mapped == 'helmet' and confidence > 0.15:
+                            if any(k in raw_name for k in ['helmet', 'hardhat', 'safety hat', 'head', 'cap']):
                                 detections['helmets'].add(box_id)
-                                print(f"⛑️ Helmet detected: {confidence:.2f}")
-                            elif mapped == 'vest' and confidence > 0.15:
+                            elif any(k in raw_name for k in ['vest', 'jacket', 'reflective', 'hi vis', 'high vis', 'safety vest']):
                                 detections['vests'].add(box_id)
-                                print(f"🦺 Vest detected: {confidence:.2f}")
-                            elif mapped == 'mask' and confidence > 0.15:
+                            elif any(k in raw_name for k in ['mask', 'respirator', 'face cover', 'n95', 'surgical']):
                                 detections['masks'].add(box_id)
-                                print(f"😷 Mask detected: {confidence:.2f}")
+                            elif any(k in raw_name for k in ['person', 'worker', 'human', 'man', 'woman', 'people']):
+                                detections['workers'].add(box_id)
                                 
                         annotated = results[0].plot()
                         video_writer.write(annotated)
                     except Exception as e:
-                        print(f"⚠️ Detection error: {e}")
+                        print(f"⚠️ Video frame detection error: {e}")
                         video_writer.write(frame)
                 else:
                     video_writer.write(frame)
@@ -932,7 +821,7 @@ def upload_feed():
             count_vests = len(detections['vests'])
             count_masks = len(detections['masks'])
             
-            print(f"📊 Final counts: Workers={count_workers}, Helmets={count_helmets}, Vests={count_vests}, Masks={count_masks}")
+            print(f"📊 Final Video Counts -> Workers={count_workers}, Helmets={count_helmets}, Vests={count_vests}, Masks={count_masks}")
             
         except Exception as e:
             print(f"⚠️ Video processing error: {e}")
@@ -941,77 +830,51 @@ def upload_feed():
     elif CV_AVAILABLE and is_real_model:
         print(f"🖼️ Processing image: {filename}")
         try:
-            # Lower confidence threshold for better mask detection
-            results = model(disk_path, conf=0.15, iou=0.45, imgsz=640)
-            
-            # Debug: Print all detected classes
-            detected_classes = []
-            for item in results:
-                for box in item.boxes:
-                    tag_class = model.names[int(box.cls[0])]
-                    detected_classes.append(tag_class)
-            print(f"🔍 All detected classes: {set(detected_classes)}")
-            
-            for item in results:
-                for box in item.boxes:
-                    tag_class = model.names[int(box.cls[0])]
-                    tag_lower = tag_class.lower().strip()
-                    confidence = float(box.conf[0])
-                    
-                    # Map to PPE categories
-                    mapped = None
-                    for key, value in ppe_mapping.items():
-                        if key in tag_lower:
-                            mapped = value
-                            break
-                    
-                    # Special handling for mask
-                    if mapped is None:
-                        mask_terms = ['mask', 'face', 'respirator', 'n95', 'surgical', 'mouth', 'nose', 'filter']
-                        if any(term in tag_lower for term in mask_terms):
-                            mapped = 'mask'
-                    
-                    # If still None, check if it's a person
-                    if mapped is None:
-                        person_terms = ['person', 'people', 'worker', 'human', 'man', 'woman']
-                        if any(term in tag_lower for term in person_terms):
-                            mapped = 'person'
-                    
-                    # Count with confidence threshold
-                    if mapped == 'person' and confidence > 0.2:
-                        count_workers += 1
-                        print(f"👤 Worker detected: {confidence:.2f}")
-                    elif mapped == 'helmet' and confidence > 0.15:
-                        count_helmets += 1
-                        print(f"⛑️ Helmet detected: {confidence:.2f}")
-                    elif mapped == 'vest' and confidence > 0.15:
-                        count_vests += 1
-                        print(f"🦺 Vest detected: {confidence:.2f}")
-                    elif mapped == 'mask' and confidence > 0.15:
-                        count_masks += 1
-                        print(f"😷 Mask detected: {confidence:.2f}")
-                        
+            results = model(disk_path, 
+                conf=0.45,         # Filters out faint background ghosts (< 45% confidence)
+                iou=0.50,          # Suppresses duplicate overlapping boxes
+                agnostic_nms=True, # Merges overlapping duplicate person boxes
+                imgsz=640
+            )
+    
             results[0].save(save_destination)
             
-            print(f"📊 Final counts: Workers={count_workers}, Helmets={count_helmets}, Vests={count_vests}, Masks={count_masks}")
+            for item in results:
+                for box in item.boxes:
+                    class_id = int(box.cls[0])
+                    raw_name = model.names.get(class_id, '').lower().replace('-', ' ').replace('_', ' ').strip()
+                    confidence = float(box.conf[0])
+                    
+                    if raw_name.startswith('no ') or 'without' in raw_name or confidence < 0.45:
+                        continue
+                    
+                    if any(k in raw_name for k in ['helmet', 'hardhat', 'safety hat', 'head', 'cap']):
+                        count_helmets += 1
+                        print(f"⛑️ Helmet counted ({confidence:.2f}): {raw_name}")
+                    elif any(k in raw_name for k in ['vest', 'jacket', 'reflective', 'hi vis', 'high vis', 'safety vest']):
+                        count_vests += 1
+                        print(f"🦺 Vest counted ({confidence:.2f}): {raw_name}")
+                    elif any(k in raw_name for k in ['mask', 'respirator', 'face cover', 'n95', 'surgical']):
+                        count_masks += 1
+                        print(f"😷 Mask counted ({confidence:.2f}): {raw_name}")
+                    elif any(k in raw_name for k in ['person', 'worker', 'human', 'man', 'woman', 'people']):
+                        count_workers += 1
+                        print(f"👤 Worker counted ({confidence:.2f}): {raw_name}")
+                        
+            print(f"📊 Final Image Counts -> Workers={count_workers}, Helmets={count_helmets}, Vests={count_vests}, Masks={count_masks}")
             
         except Exception as e:
             print(f"⚠️ Image processing error: {e}")
             shutil.copy2(disk_path, save_destination)
     else:
-        # Simulation mode with realistic results including masks
         import random
         count_workers = random.randint(1, 5)
         count_helmets = random.randint(0, count_workers)
         count_vests = random.randint(0, count_workers)
-        count_masks = random.randint(0, count_workers)  # Masks are now included
+        count_masks = random.randint(0, count_workers)
         shutil.copy2(disk_path, save_destination)
-        print("🎲 Using simulation mode for detection")
 
-    # ============================================
-    # ENHANCED VIOLATION DETECTION WITH MASKS
-    # ============================================
-    
+    # Violation Checks
     compliance_state = 'SAFE'
     violation_incident_reports = []
     
@@ -1022,11 +885,10 @@ def upload_feed():
         if count_vests < count_workers:
             compliance_state = 'VIOLATION DETECTED'
             violation_incident_reports.append('Missing high-visibility vest')
-        if count_masks < count_workers:
-            compliance_state = 'VIOLATION DETECTED'
-            violation_incident_reports.append('Missing face mask')  # This will now trigger
+        #if count_masks < count_workers:
+        #    compliance_state = 'VIOLATION DETECTED'
+        #    violation_incident_reports.append('Missing face mask')
 
-    # Save record
     record = {
         'uploaded_by': session.get('username'),
         'file_name': filename,
@@ -1055,6 +917,28 @@ def upload_feed():
     return redirect(url_for('dashboard'))
 
 # ============================================
+# DATA MANAGEMENT API
+# ============================================
+
+@app.route('/api/clear-all-data', methods=['POST'])
+@login_required
+def clear_all_data():
+    username = session.get('username')
+    try:
+        if records_col is not None:
+            records_col.delete_many({'uploaded_by': username})
+            documents_col.delete_many({'uploaded_by': username})
+            knowledge_col.delete_many({'uploaded_by': username})
+        else:
+            STORAGE['records'] = [r for r in STORAGE['records'] if r.get('uploaded_by') != username]
+            STORAGE['documents'] = [d for d in STORAGE['documents'] if d.get('uploaded_by') != username]
+            STORAGE['knowledge'] = [k for k in STORAGE['knowledge'] if k.get('uploaded_by') != username]
+            
+        return jsonify({'success': True, 'message': 'All account records cleared successfully!'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ============================================
 # DOCUMENT ROUTES
 # ============================================
 
@@ -1062,16 +946,14 @@ def upload_feed():
 @login_required
 def documents_page():
     if documents_col is not None:
-        docs = list(documents_col.find(
-            {'uploaded_by': session.get('username')}
-        ).sort('_id', -1))
+        docs = list(documents_col.find({'uploaded_by': session.get('username')}).sort('_id', -1))
     else:
         docs = [d for d in STORAGE['documents'] if d.get('uploaded_by') == session.get('username')]
     
     return render_template('documents.html', 
-                         user=session.get('username'), 
-                         role=session.get('role'), 
-                         documents=docs)
+                           user=session.get('username'), 
+                           role=session.get('role'), 
+                           documents=docs)
 
 @app.route('/upload-document', methods=['GET', 'POST'])
 @login_required
@@ -1114,7 +996,6 @@ def upload_document():
             'sections': sections[:5]
         }
         
-        # Save to database
         if documents_col is not None:
             try:
                 doc_id = documents_col.insert_one(document_record).inserted_id
@@ -1166,9 +1047,9 @@ def view_document(doc_id):
         return redirect(url_for('documents_page'))
     
     return render_template('document_detail.html', 
-                         user=session.get('username'), 
-                         role=session.get('role'),
-                         document=doc)
+                           user=session.get('username'), 
+                           role=session.get('role'), 
+                           document=doc)
 
 @app.route('/delete-document/<doc_id>', methods=['POST'])
 @login_required
@@ -1225,8 +1106,8 @@ def delete_all_visual_records():
 def search_knowledge():
     if request.method == 'GET':
         return render_template('knowledge_search.html', 
-                             user=session.get('username'), 
-                             role=session.get('role'))
+                               user=session.get('username'), 
+                               role=session.get('role'))
     
     query = request.form.get('query', '').strip()
     search_type = request.form.get('search_type', 'full_text')
@@ -1238,12 +1119,12 @@ def search_knowledge():
     results = search_knowledge_base(query, search_type)
     
     return render_template('knowledge_search.html', 
-                         user=session.get('username'), 
-                         role=session.get('role'),
-                         query=query,
-                         results=results,
-                         result_count=len(results),
-                         search_type=search_type)
+                           user=session.get('username'), 
+                           role=session.get('role'), 
+                           query=query, 
+                           results=results, 
+                           result_count=len(results), 
+                           search_type=search_type)
 
 # ============================================
 # API ROUTES
@@ -1252,10 +1133,11 @@ def search_knowledge():
 @app.route('/api/compliance-stats')
 @login_required
 def compliance_stats():
+    username = session.get('username')
     if records_col is not None:
-        records = list(records_col.find({'uploaded_by': session.get('username')}))
+        records = list(records_col.find({'uploaded_by': username}))
     else:
-        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == session.get('username')]
+        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == username]
     
     total = len(records)
     violations = sum(1 for r in records if r.get('status') == 'VIOLATION DETECTED')
@@ -1272,10 +1154,11 @@ def compliance_stats():
 @app.route('/api/analytics')
 @login_required
 def analytics_data():
+    username = session.get('username')
     if records_col is not None:
-        records = list(records_col.find({'uploaded_by': session.get('username')}))
+        records = list(records_col.find({'uploaded_by': username}))
     else:
-        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == session.get('username')]
+        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == username]
     
     total = len(records)
     violations = sum(1 for r in records if r.get('status') == 'VIOLATION DETECTED')
@@ -1318,13 +1201,14 @@ def analytics_data():
 @app.route('/api/alerts')
 @login_required
 def get_alerts():
+    username = session.get('username')
     if records_col is not None:
         alerts = list(records_col.find({
-            'uploaded_by': session.get('username'),
+            'uploaded_by': username, 
             'status': 'VIOLATION DETECTED'
         }).sort('_id', -1).limit(50))
     else:
-        alerts = [r for r in STORAGE['records'] if r.get('status') == 'VIOLATION DETECTED'][:50]
+        alerts = [r for r in STORAGE['records'] if r.get('uploaded_by') == username and r.get('status') == 'VIOLATION DETECTED'][:50]
     
     return jsonify([{
         '_id': str(a.get('_id', a.get('id', ''))),
@@ -1387,10 +1271,11 @@ def rag_stats():
 @app.route('/knowledge-stats')
 @login_required
 def knowledge_stats():
+    username = session.get('username')
     if documents_col is not None:
-        total = documents_col.count_documents({'uploaded_by': session.get('username')})
+        total = documents_col.count_documents({'uploaded_by': username})
     else:
-        total = len([d for d in STORAGE['documents'] if d.get('uploaded_by') == session.get('username')])
+        total = len([d for d in STORAGE['documents'] if d.get('uploaded_by') == username])
     return jsonify({'total_documents': total})
 
 @app.route('/api/chat/sessions')
@@ -1419,14 +1304,38 @@ def export_pdf():
         flash('PDF export requires xhtml2pdf. Install with: pip install xhtml2pdf', 'error')
         return redirect(url_for('dashboard'))
     
+    username = session.get('username')
     if records_col is not None:
-        records = list(records_col.find({'uploaded_by': session.get('username')}).sort('_id', -1))
+        records = list(records_col.find({'uploaded_by': username}).sort('_id', -1))
     else:
-        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == session.get('username')]
+        records = [r for r in STORAGE['records'] if r.get('uploaded_by') == username]
     
     total = len(records)
     violations = sum(1 for r in records if r.get('status') == 'VIOLATION DETECTED')
     compliance = round(((total - violations) / total * 100) if total > 0 else 100)
+
+    # Format records for PDF (resolving local image paths for xhtml2pdf)
+    formatted_records = []
+    for r in records:
+        img_url = r.get('processed_url', '')
+        clean_rel_path = img_url.lstrip('/') if img_url.startswith('/') else img_url
+        abs_img_path = os.path.abspath(clean_rel_path)
+        
+        # Fallback to uploads folder if processed output path isn't found directly
+        if not os.path.exists(abs_img_path):
+            orig_file = r.get('file_name', '')
+            abs_img_path = os.path.abspath(os.path.join(UPLOAD_FOLDER, orig_file))
+            if not os.path.exists(abs_img_path):
+                abs_img_path = None
+
+        formatted_records.append({
+            'file_name': r.get('file_name', 'Unknown Image'),
+            'img_path': abs_img_path,
+            'status': r.get('status', 'UNKNOWN'),
+            'violations': r.get('violations', []),
+            'summary': r.get('summary', {}),
+            'upload_date': r.get('upload_date', datetime.now()).strftime("%Y-%m-%d %H:%M:%S") if isinstance(r.get('upload_date'), datetime) else str(r.get('upload_date', ''))
+        })
 
     report_template = """
     <!DOCTYPE html>
@@ -1434,40 +1343,109 @@ def export_pdf():
     <head>
         <meta charset="utf-8">
         <style>
-            body { font-family: Helvetica, Arial, sans-serif; color: #2d3748; }
-            .header { background: #1a365d; color: white; padding: 20px; text-align: center; }
-            .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-            th { background: #edf2f7; }
-            .safe { color: green; font-weight: bold; }
-            .violation { color: red; font-weight: bold; }
+            @page {
+                size: A4 portrait;
+                margin: 12mm;
+            }
+            body { font-family: Helvetica, Arial, sans-serif; color: #1e293b; font-size: 11px; }
+            .header { background: #1a365d; color: white; padding: 14px; text-align: center; border-radius: 4px; margin-bottom: 15px; }
+            .header h1 { margin: 0 0 4px 0; font-size: 20px; }
+            .header p { margin: 2px 0; font-size: 10px; opacity: 0.9; }
+            
+            .section-title { font-size: 13px; font-weight: bold; color: #1a365d; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; margin-top: 15px; margin-bottom: 10px; }
+            
+            .stats-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+            .stats-table td { padding: 6px 10px; border: 1px solid #cbd5e1; }
+            .stats-table .label { font-weight: bold; background: #f8fafc; width: 40%; }
+            
+            .record-card { margin-bottom: 15px; padding: 10px; border: 1px solid #cbd5e1; background: #ffffff; page-break-inside: avoid; }
+            .card-table { width: 100%; border-collapse: collapse; }
+            .card-table td { vertical-align: top; }
+            
+            .img-col { width: 45%; padding-right: 12px; }
+            .desc-col { width: 55%; }
+            
+            .detection-img { width: 100%; max-height: 170px; border-radius: 4px; border: 1px solid #e2e8f0; }
+            
+            .badge-safe { color: #15803d; font-weight: bold; background: #dcfce7; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+            .badge-violation { color: #b91c1c; font-weight: bold; background: #fee2e2; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+            
+            .counts-table { width: 100%; margin-top: 8px; margin-bottom: 8px; border-collapse: collapse; }
+            .counts-table td { padding: 4px 6px; border: 1px solid #e2e8f0; font-size: 10px; background: #f8fafc; }
+            
+            .violation-list { color: #dc2626; margin-top: 4px; padding-left: 15px; font-size: 10px; }
         </style>
     </head>
     <body>
         <div class="header">
             <h1>VisionDesk AI Compliance Report</h1>
-            <p>Generated: {{ date_str }}</p>
-            <p>User: {{ user }}</p>
+            <p>Generated: {{ date_str }} | User: {{ user }}</p>
         </div>
-        <div class="section">
-            <h2>Summary Statistics</h2>
-            <table>
-                <tr><td>Total Audits:</td><td>{{ total }}</td></tr>
-                <tr><td>Violations:</td><td>{{ violations }}</td></tr>
-                <tr><td>Compliance Rate:</td><td>{{ compliance }}%</td></tr>
+
+        <div class="section-title">Summary Statistics</div>
+        <table class="stats-table">
+            <tr><td class="label">Total Audits:</td><td>{{ total }}</td></tr>
+            <tr><td class="label">Violations Detected:</td><td>{{ violations }}</td></tr>
+            <tr><td class="label">Compliance Rate:</td><td><b>{{ compliance }}%</b></td></tr>
+        </table>
+
+        <div class="section-title">Detailed Visual Inspection Audits ({{ formatted_records|length }})</div>
+
+        {% for r in formatted_records %}
+        <div class="record-card">
+            <table class="card-table">
+                <tr>
+                    <td class="img-col">
+                        {% if r.img_path %}
+                            <img src="{{ r.img_path }}" class="detection-img" />
+                        {% else %}
+                            <div style="background:#f1f5f9; padding:40px 10px; text-align:center; color:#64748b;">[Image Unavailable]</div>
+                        {% endif %}
+                    </td>
+                    <td class="desc-col">
+                        <h3 style="margin:0 0 4px 0; font-size:12px; color:#0f172a;">{{ r.file_name }}</h3>
+                        <p style="margin:0 0 6px 0; color:#64748b; font-size:10px;">Audit Date: {{ r.upload_date }}</p>
+                        
+                        <div>
+                            {% if r.status == 'SAFE' %}
+                                <span class="badge-safe">SAFE</span>
+                            {% else %}
+                                <span class="badge-violation">VIOLATION DETECTED</span>
+                            {% endif %}
+                        </div>
+
+                        <table class="counts-table">
+                            <tr>
+                                <td><b>Workers:</b> {{ r.summary.get('workers', 0) }}</td>
+                                <td><b>Helmets:</b> {{ r.summary.get('helmets', 0) }}</td>
+                                <td><b>Vests:</b> {{ r.summary.get('vests', 0) }}</td>
+                            </tr>
+                        </table>
+
+                        {% if r.violations %}
+                            <div style="font-weight:bold; color:#b91c1c; margin-top:4px;">Flagged Issues:</div>
+                            <ul class="violation-list" style="margin:2px 0 0 0;">
+                                {% for v in r.violations %}
+                                    <li>{{ v }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                </tr>
             </table>
         </div>
+        {% endfor %}
     </body>
     </html>
     """
     
     rendered_html = render_template_string(report_template,
-        user=session.get('username'),
+        user=username,
         date_str=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         total=total,
         violations=violations,
-        compliance=compliance
+        compliance=compliance,
+        formatted_records=formatted_records
     )
     
     pdf_buffer = io.BytesIO()
@@ -1477,7 +1455,7 @@ def export_pdf():
     
     response = make_response(pdf_bytes)
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename=Compliance_Report_{datetime.now().strftime("%Y%m%d")}.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=Compliance_Report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
     return response
 
 @app.route('/export-knowledge-pdf')
@@ -1487,10 +1465,11 @@ def export_knowledge_pdf():
         flash('PDF export requires xhtml2pdf. Install with: pip install xhtml2pdf', 'error')
         return redirect(url_for('dashboard'))
     
+    username = session.get('username')
     if documents_col is not None:
-        docs = list(documents_col.find({'uploaded_by': session.get('username')}).sort('_id', -1))
+        docs = list(documents_col.find({'uploaded_by': username}).sort('_id', -1))
     else:
-        docs = [d for d in STORAGE['documents'] if d.get('uploaded_by') == session.get('username')]
+        docs = [d for d in STORAGE['documents'] if d.get('uploaded_by') == username]
     
     report_template = """
     <!DOCTYPE html>
@@ -1521,7 +1500,7 @@ def export_knowledge_pdf():
     """
     
     rendered_html = render_template_string(report_template,
-        user=session.get('username'),
+        user=username,
         date_str=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         docs=docs
     )
@@ -1537,7 +1516,7 @@ def export_knowledge_pdf():
     return response
 
 # ============================================
-# STATIC FILES
+# STATIC FILES & ERRORS
 # ============================================
 
 @app.route('/uploads/media/<path:filename>')
@@ -1551,10 +1530,6 @@ def uploaded_document(filename):
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory('static', filename)
-
-# ============================================
-# ERROR HANDLERS
-# ============================================
 
 @app.errorhandler(404)
 def not_found(e):

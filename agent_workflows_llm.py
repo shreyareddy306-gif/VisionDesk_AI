@@ -89,7 +89,8 @@ class VisionDeskLLMAgent:
                 'tool_results': [{'type': 'greeting', 'status': 'success'}]
             }
 
-        context = self._gather_context(query_lower)
+        # Pass username to gather user-specific context
+        context = self._gather_context(query_lower, username)
         response_text = self._generate_response(query, context)
         action = self._detect_action(query_lower)
 
@@ -109,7 +110,7 @@ class VisionDeskLLMAgent:
             'tool_results': [{'type': 'llm_grounded', 'status': 'success'}]
         }
 
-    def _gather_context(self, query_lower):
+    def _gather_context(self, query_lower, username):
         context = {'rag_results': [], 'ppe_stats': {}, 'zone_data': {}, 'violations': [],
                    'dashboard_stats': {}, 'document_list': []}
 
@@ -122,9 +123,10 @@ class VisionDeskLLMAgent:
         if self.records_col is None:
             return context
 
+        # Filter PPE stats by logged-in user
         if any(kw in query_lower for kw in ['ppe', 'helmet', 'vest', 'mask', 'compliance']):
             try:
-                records = list(self.records_col.find({}).sort('upload_date', -1).limit(100))
+                records = list(self.records_col.find({'uploaded_by': username}).sort('upload_date', -1).limit(100))
                 workers = sum(r.get('summary', {}).get('workers', 0) for r in records)
                 helmets = sum(r.get('summary', {}).get('helmets', 0) for r in records)
                 vests = sum(r.get('summary', {}).get('vests', 0) for r in records)
@@ -138,30 +140,39 @@ class VisionDeskLLMAgent:
             except Exception as e:
                 print(f"⚠️ PPE stats failed: {e}")
 
+        # Filter Zone data by logged-in user
         zone_match = re.search(r'zone\s*([a-z0-9]+)', query_lower, re.IGNORECASE)
         if zone_match:
             zone = zone_match.group(1).upper()
             try:
-                records = list(self.records_col.find({'file_name': {'$regex': f'zone[_ ]*{zone}', '$options': 'i'}}))
+                records = list(self.records_col.find({
+                    'uploaded_by': username,
+                    'file_name': {'$regex': f'zone[_ ]*{zone}', '$options': 'i'}
+                }))
                 total = len(records)
                 violations = sum(1 for r in records if r.get('status') == 'VIOLATION DETECTED')
                 context['zone_data'] = {'zone': zone, 'total': total, 'violations': violations}
             except Exception as e:
                 print(f"⚠️ Zone lookup failed: {e}")
 
+        # Filter Violations by logged-in user
         if any(kw in query_lower for kw in ['violation', 'incident', 'alert', 'hazard', 'recent']):
             try:
-                records = list(self.records_col.find({'status': 'VIOLATION DETECTED'}).sort('upload_date', -1).limit(5))
+                records = list(self.records_col.find({
+                    'uploaded_by': username,
+                    'status': 'VIOLATION DETECTED'
+                }).sort('upload_date', -1).limit(5))
                 context['violations'] = records
             except Exception as e:
                 print(f"⚠️ Violations lookup failed: {e}")
 
+        # Filter Dashboard overview stats by logged-in user
         if any(kw in query_lower for kw in ['dashboard', 'overview', 'summary', 'site status', 'how are we doing', 'general stats']):
             try:
-                total = self.records_col.count_documents({})
-                violations = self.records_col.count_documents({'status': 'VIOLATION DETECTED'})
+                total = self.records_col.count_documents({'uploaded_by': username})
+                violations = self.records_col.count_documents({'uploaded_by': username, 'status': 'VIOLATION DETECTED'})
                 safe = total - violations
-                compliance_pct = round(safe / total * 100) if total else 0
+                compliance_pct = round(safe / total * 100) if total else 100
                 context['dashboard_stats'] = {
                     'total': total, 'safe': safe, 'violations': violations,
                     'compliance_pct': compliance_pct,
@@ -170,12 +181,12 @@ class VisionDeskLLMAgent:
             except Exception as e:
                 print(f"⚠️ Dashboard stats lookup failed: {e}")
 
-        # Documents-list questions -- "what documents do we have", "list uploaded documents", etc.
+        # Filter Document list by logged-in user
         if self.documents_col is not None and any(kw in query_lower for kw in
                 ['what documents', 'list documents', 'uploaded documents', 'how many documents',
                  'which documents', 'documents do we have', 'documents uploaded']):
             try:
-                docs = list(self.documents_col.find({}).sort('upload_date', -1).limit(20))
+                docs = list(self.documents_col.find({'uploaded_by': username}).sort('upload_date', -1).limit(20))
                 context['document_list'] = [
                     {'filename': d.get('filename', 'Unknown'), 'upload_date': str(d.get('upload_date', ''))}
                     for d in docs

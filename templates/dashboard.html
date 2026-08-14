@@ -25,11 +25,784 @@
 
         /* ===== ANIMATED BACKGROUND ===== */
         .bg-animation {
+<<<<<<< HEAD
+=======
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-animation .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-animation .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: #7c3aed;
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation .orb:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: #06b6d4;
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -7s;
+        }
+
+        .bg-animation .orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: #8b5cf6;
+            top: 50%;
+            left: 50%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -50px) scale(1.1); }
+            50% { transform: translate(-20px, 30px) scale(0.9); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 45px;
+            padding-left: 8px;
+        }
+
+        .logo i {
+            font-size: 36px;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .menu-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            padding: 12px 14px 8px;
+            font-weight: 600;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #94a3b8;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .menu a i {
+            width: 22px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .menu a:hover {
+            background: rgba(124, 58, 237, 0.15);
+            color: #e2e8f0;
+            transform: translateX(4px);
+        }
+
+        .menu a.active {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(6, 182, 212, 0.15));
+            color: #a78bfa;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .menu a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: linear-gradient(180deg, #7c3aed, #06b6d4);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .menu a.rag-link {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(124, 58, 237, 0.25);
+        }
+
+        .menu a.rag-link:hover {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(6, 182, 212, 0.2));
+            transform: translateX(4px) scale(1.02);
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            color: white;
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: auto;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 16px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            margin-left: 280px;
+            padding: 32px 40px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .header-left p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .header-left .highlight {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .search-box i {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 10px 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+            width: 220px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: #64748b;
+        }
+
+        .notification-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            color: #94a3b8;
+        }
+
+        .notification-btn:hover {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: rgba(124, 58, 237, 0.3);
+            color: #e2e8f0;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #0a0e1a;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px 6px 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+        }
+
+        .profile-info {
+            line-height: 1.3;
+        }
+
+        .profile-info .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .profile-info .role {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 22px 24px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card .stat-icon.purple { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+        .stat-card .stat-icon.blue { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+        .stat-card .stat-icon.green { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .stat-card .stat-icon.red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .stat-card .stat-icon.orange { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+        .stat-card .stat-icon.pink { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+        .stat-card .stat-value {
+            font-size: 30px;
+            font-weight: 700;
+            color: #f1f5f9;
+            line-height: 1.2;
+        }
+
+        .stat-card .stat-label {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* ===== CHART ===== */
+        .chart-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: rgba(124, 58, 237, 0.15);
+        }
+
+        .chart-card .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chart-card .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .chart-card .chart-title i {
+            margin-right: 8px;
+            color: #a78bfa;
+        }
+
+        .chart-card .chart-subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* ===== COMPLIANCE METER ===== */
+        .compliance-meter {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .compliance-meter .meter-circle {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .compliance-meter .meter-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .compliance-meter .meter-label {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        .compliance-meter .meter-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .compliance-meter .meter-status.good { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .compliance-meter .meter-status.warning { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+        .compliance-meter .meter-status.danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+        /* ===== RECORD CARDS (ENHANCED) ===== */
+        .records-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .record-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+        }
+
+        .record-card:hover {
+            transform: translateX(4px);
+            border-color: rgba(124, 58, 237, 0.15);
+        }
+
+        .record-card.removing {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .record-card .record-thumb {
+            width: 100px;
+            height: 75px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .record-card .record-thumb:hover {
+            border-color: #7c3aed;
+            transform: scale(1.05);
+        }
+
+        .record-card .record-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .record-card .record-name {
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .record-card .record-details {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .record-card .record-details .pill {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .record-card .record-details .pill i {
+            font-size: 12px;
+        }
+
+        .record-card .record-details .pill .count {
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .record-card .record-details .pill.helmet i { color: #f59e0b; }
+        .record-card .record-details .pill.vest i { color: #3b82f6; }
+        .record-card .record-details .pill.mask i { color: #22d3ee; }
+        .record-card .record-details .pill.worker i { color: #a78bfa; }
+
+        /* Violation highlight */
+        .record-card .record-details .pill.violation {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .record-card .record-details .pill.violation .count {
+            color: #f87171;
+        }
+
+        .record-card .record-status {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .record-card .record-status.safe {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .record-card .record-status.violation {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .record-card .record-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: none;
+            color: #f87171;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .record-card .record-delete:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.05);
+        }
+
+        .record-delete-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: none;
+            color: #f87171;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .record-delete-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== IMAGE POPUP / LIGHTBOX ===== */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85vh;
+            position: relative;
+            animation: lightboxIn 0.3s ease;
+        }
+
+        @keyframes lightboxIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 50%;
+            color: #f87171;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            color: #94a3b8;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .lightbox-info strong {
+            color: #f1f5f9;
+        }
+
+        .lightbox-info .violation-text {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick-action-btn {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(124, 58, 237, 0.15);
+            border-color: rgba(124, 58, 237, 0.2);
+            color: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .quick-action-btn i { font-size: 16px; width: 20px; text-align: center; }
+        .quick-action-btn.purple i { color: #a78bfa; }
+        .quick-action-btn.blue i { color: #22d3ee; }
+        .quick-action-btn.green i { color: #4ade80; }
+        .quick-action-btn.red i { color: #f87171; }
+        .quick-action-btn.orange i { color: #fb923c; }
+        .quick-action-btn.pink i { color: #f472b6; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+<<<<<<< HEAD
             z-index: 0;
             overflow: hidden;
             pointer-events: none;
@@ -650,11 +1423,189 @@
         @media(max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
             .main { margin-left: 0; max-width: 100vw; padding: 20px; }
+=======
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: #1a1a2e;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-box h3 {
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .modal-box p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-box p strong { color: #f1f5f9; }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .modal-btn.cancel {
+            background: rgba(255,255,255,0.08);
+            color: #94a3b8;
+        }
+
+        .modal-btn.cancel:hover { background: rgba(255,255,255,0.15); }
+
+        .modal-btn.confirm {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            background: #dc2626;
+            transform: scale(1.02);
+        }
+
+        .modal-btn.confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 420px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
+            font-size: 14px;
+        }
+
+        .toast.show { transform: translateX(0); }
+
+        .toast.success {
+            background: rgba(34, 197, 94, 0.9);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.9);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .toast.info {
+            background: rgba(124, 58, 237, 0.9);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer span {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width: 1200px) {
+            .charts-row, .records-section { grid-template-columns: 1fr; }
+        }
+
+        @media(max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .quick-actions { grid-template-columns: 1fr; }
+        }
+
+        @media(max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: stretch; }
+            .header-right { flex-wrap: wrap; }
+            .search-box input { width: 140px; }
+            .record-card { flex-wrap: wrap; }
+            .record-card .record-thumb { width: 100%; height: 120px; }
+            .chart-wrapper { height: 200px; }
+            .lightbox-content { max-width: 100%; padding: 10px; }
+            .lightbox-close { top: 10px; right: 10px; }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.5); }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
+        }
+
+        @media(max-width: 992px) { .hamburger { display: block; } }
     </style>
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
+    <!-- ===== ANIMATED BACKGROUND ===== -->
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
     <div class="bg-animation">
         <div class="orb"></div>
         <div class="orb"></div>
@@ -664,12 +1615,18 @@
     <!-- ===== SIDEBAR ===== -->
     <div class="sidebar" id="sidebar">
         <div class="logo">
+<<<<<<< HEAD
             <span>VisionDesk</span>
             <i class="fa-solid fa-brain"></i>
+=======
+            <i class="fa-solid fa-brain"></i>
+            Vision<span>Desk</span>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         </div>
         <div class="menu">
             <div class="menu-label">Main</div>
             <a href="/" class="active">
+<<<<<<< HEAD
                 <span>Dashboard</span>
                 <i class="fa-solid fa-chart-line"></i>
             </a>
@@ -704,25 +1661,65 @@
             <a href="/settings">
                 <span>Settings</span>
                 <i class="fa-solid fa-gear"></i>
+=======
+                <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
+            <a href="/upload-feed">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Media
+            </a>
+            <a href="/upload-document">
+                <i class="fa-solid fa-file-pdf"></i> Documents
+                <span class="badge-new">AI</span>
+            </a>
+            <a href="/search-knowledge">
+                <i class="fa-solid fa-magnifying-glass"></i> Search Knowledge
+            </a>
+            <a href="/rag-chat" class="rag-link">
+                <i class="fa-solid fa-comments"></i> AI Assistant
+                <span class="badge-new">New</span>
+            </a>
+
+            <div class="menu-label" style="margin-top:20px;">Reports</div>
+            <a href="/export/pdf">
+                <i class="fa-solid fa-file-pdf"></i> Export Reports
+            </a>
+            <a href="#">
+                <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+            <a href="/settings">
+                <i class="fa-solid fa-gear"></i> Settings
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             </a>
         </div>
         <div class="logout">
             <a href="/logout">
+<<<<<<< HEAD
                 <span>Logout</span>
                 <i class="fa-solid fa-right-from-bracket"></i>
+=======
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             </a>
         </div>
     </div>
 
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main">
+        <!-- ===== HEADER ===== -->
         <div class="header">
             <div class="header-left">
+<<<<<<< HEAD
+=======
+                <button class="hamburger" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                 <h1>Welcome back, <span class="highlight">{{ user }}</span></h1>
                 <p>AI-powered PPE detection &amp; knowledge intelligence</p>
             </div>
             <div class="header-right">
                 <div class="search-box">
+<<<<<<< HEAD
                     <input type="text" placeholder="Search dashboard..." id="searchInput">
                     <i class="fa-solid fa-search"></i>
                 </div>
@@ -731,12 +1728,27 @@
                     <div>
                         <div style="font-size: 13.5px; font-weight:600;">{{ user }}</div>
                         <div style="font-size: 11px; color:#94a3b8;">{{ role }}</div>
+=======
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search dashboard..." id="searchInput">
+                </div>
+                <div class="notification-btn" onclick="showNotification()">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </div>
+                <div class="profile-card">
+                    <div class="avatar">{{ user[0]|upper }}</div>
+                    <div class="profile-info">
+                        <div class="name">{{ user }}</div>
+                        <div class="role">{{ role }}</div>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ===== STATS ===== -->
+<<<<<<< HEAD
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-header">
@@ -784,6 +1796,43 @@
                     <div class="stat-icon orange"><i class="fa-solid fa-brain"></i></div>
                 </div>
                 <div class="stat-value" id="ragChunks">0</div>
+=======
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon purple"><i class="fa-solid fa-folder-open"></i></div>
+                <div class="stat-value counter" id="statTotal">0</div>
+                <div class="stat-label">Total Audits</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="stat-value counter" id="statViolations">0</div>
+                <div class="stat-label">Violations</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-value counter" id="statSafe">0</div>
+                <div class="stat-label">Safe Records</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="stat-value counter" id="statCompliance">0%</div>
+                <div class="stat-label">Compliance Rate</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon pink"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="stat-value counter" id="docCount">0</div>
+                <div class="stat-label">Documents</div>
+            </div>
+
+            <div class="stat-card" style="border-color: rgba(124, 58, 237, 0.2);">
+                <div class="stat-icon orange"><i class="fa-solid fa-brain"></i></div>
+                <div class="stat-value counter" id="ragChunks">0</div>
+                <div class="stat-label">Knowledge Chunks</div>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             </div>
         </div>
 
@@ -794,6 +1843,14 @@
                     <div>
                         <div class="chart-title"><i class="fa-solid fa-chart-bar"></i> Safety Analytics</div>
                         <div class="chart-subtitle">Detection summary overview</div>
+<<<<<<< HEAD
+=======
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <span style="font-size:12px;color:#94a3b8;"><span style="color:#a78bfa;">●</span> Total</span>
+                        <span style="font-size:12px;color:#94a3b8;"><span style="color:#4ade80;">●</span> Safe</span>
+                        <span style="font-size:12px;color:#94a3b8;"><span style="color:#f87171;">●</span> Violations</span>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     </div>
                 </div>
                 <div class="chart-wrapper">
@@ -813,14 +1870,26 @@
                         <canvas id="gaugeChart"></canvas>
                         <div class="meter-value" id="gaugeValue">0%</div>
                     </div>
+<<<<<<< HEAD
                     <div class="meter-status" id="meterStatus"><i class="fa-solid fa-circle"></i> Loading...</div>
+=======
+                    <div class="meter-label">Site Compliance Index</div>
+                    <div class="meter-status" id="meterStatus">
+                        <i class="fa-solid fa-circle"></i> Loading...
+                    </div>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                 </div>
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- ===== RECENT RECORDS & QUICK ACTIONS (SIDE-BY-SIDE) ===== -->
         <div class="records-section" id="recent-detections-section" style="scroll-margin-top: 24px;">
             <!-- Left: Recent Detections -->
+=======
+        <!-- ===== RECENT RECORDS (ENHANCED) ===== -->
+        <div class="records-section">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
@@ -828,25 +1897,42 @@
                         <div class="chart-subtitle">Click on any image to view in full size</div>
                     </div>
                     <button class="record-delete-btn" onclick="confirmDeleteAll()">
+<<<<<<< HEAD
                         <span>Delete All</span>
                         <i class="fa-solid fa-trash-can"></i>
+=======
+                        <i class="fa-solid fa-trash-can"></i> Delete All
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     </button>
                 </div>
 
                 <div id="recordsContainer">
                     {% for item in data %}
                     <div class="record-card" id="record-{{ item._id|string }}">
+<<<<<<< HEAD
                         {% if item.file_name.lower().endswith(('.mp4','.avi','.mov')) %}
                         <video class="record-thumb" muted onclick="openVisualModal('{{ item.processed_url }}', '{{ item.file_name }}', '{{ item.status }}', 'video')">
                             <source src="{{ item.processed_url }}" type="video/mp4">
                         </video>
                         {% else %}
                         <img src="{{ item.processed_url }}" class="record-thumb" onclick="openVisualModal('{{ item.processed_url }}', '{{ item.file_name }}', '{{ item.status }}', 'image')" loading="lazy">
+=======
+                        <!-- Clickable Thumbnail -->
+                        {% if item.file_name.lower().endswith(('.mp4','.avi','.mov')) %}
+                        <video class="record-thumb" muted onclick="openLightbox(this, '{{ item.file_name }}', '{{ item.status }}', '{{ item.violations|tojson }}')">
+                            <source src="{{ item.processed_url }}" type="video/mp4">
+                        </video>
+                        {% else %}
+                        <img src="{{ item.processed_url }}" class="record-thumb" 
+                             onclick="openLightbox(this, '{{ item.file_name }}', '{{ item.status }}', '{{ item.violations|tojson }}')"
+                             loading="lazy">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                         {% endif %}
                         
                         <div class="record-info">
                             <div class="record-name">{{ item.file_name }}</div>
                             <div class="record-details">
+<<<<<<< HEAD
                                 <span class="pill worker"><i class="fa-solid fa-user"></i> Workers: <span class="count">{{ item.summary.workers }}</span></span>
                                 <span class="pill helmet"><i class="fa-solid fa-hard-hat"></i> Helmets: <span class="count">{{ item.summary.helmets }}</span></span>
                                 <span class="pill vest"><i class="fa-solid fa-shirt"></i> Vests: <span class="count">{{ item.summary.vests }}</span></span>
@@ -855,35 +1941,86 @@
                             <div style="margin-top:4px; font-size:11px; color:#f87171;">
                                 {% for v in item.violations %}
                                 <span>• {{ v }} </span>
+=======
+                                <!-- Workers -->
+                                <span class="pill worker">
+                                    <i class="fa-solid fa-user"></i>
+                                    Workers: <span class="count">{{ item.summary.workers }}</span>
+                                </span>
+                                <!-- Helmets -->
+                                <span class="pill helmet {% if item.summary.helmets < item.summary.workers %}violation{% endif %}">
+                                    <i class="fa-solid fa-hard-hat"></i>
+                                    Helmets: <span class="count">{{ item.summary.helmets }}</span>
+                                </span>
+                                <!-- Vests -->
+                                <span class="pill vest {% if item.summary.vests < item.summary.workers %}violation{% endif %}">
+                                    <i class="fa-solid fa-shirt"></i>
+                                    Vests: <span class="count">{{ item.summary.vests }}</span>
+                                </span>
+                                <!-- Masks -->
+                                <span class="pill mask {% if item.summary.get('masks',0) < item.summary.workers %}violation{% endif %}">
+                                    <i class="fa-solid fa-mask-face"></i>
+                                    Masks: <span class="count">{{ item.summary.get('masks',0) }}</span>
+                                </span>
+                            </div>
+                            <!-- Violation Details -->
+                            {% if item.violations %}
+                            <div style="margin-top:6px;font-size:12px;color:#f87171;">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                {% for v in item.violations %}
+                                <span style="margin-right:8px;">• {{ v }}</span>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                                 {% endfor %}
                             </div>
                             {% endif %}
                         </div>
                         
+<<<<<<< HEAD
                         <span class="record-status {% if item.status == 'SAFE' %}safe{% else %}violation{% endif %}">{{ item.status }}</span>
+=======
+                        <span class="record-status {% if item.status == 'SAFE' %}safe{% else %}violation{% endif %}">
+                            {{ item.status }}
+                        </span>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                         
                         <button class="record-delete" onclick="event.stopPropagation(); confirmDeleteRecord('{{ item._id|string }}', '{{ item.file_name }}')">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
                     {% else %}
+<<<<<<< HEAD
                     <div style="text-align:center; padding:32px 0; color:#64748b;">
                         <i class="fa-solid fa-inbox" style="font-size:36px; display:block; margin-bottom:8px;"></i>
                         <p>No detection records yet</p>
+=======
+                    <div style="text-align:center;padding:40px 0;color:#64748b;">
+                        <i class="fa-solid fa-inbox" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                        <p>No detection records yet</p>
+                        <p style="font-size:13px;">Upload media to start analyzing</p>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- Right: Quick Actions Card -->
             <div class="chart-card">
                 <div class="chart-header">
                     <div>
                         <div class="chart-title" style="color: #34d399;"><i class="fa-solid fa-bolt"></i> Quick Actions</div>
+=======
+            <!-- ===== QUICK ACTIONS ===== -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <div class="chart-title"><i class="fa-solid fa-bolt"></i> Quick Actions</div>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                         <div class="chart-subtitle">Common tasks &amp; tools</div>
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <div class="quick-actions-grid">
                     <a href="/upload-feed" class="qa-card emerald"><span>Upload Media</span> <i class="fa-solid fa-cloud-arrow-up"></i></a>
                     <a href="/upload-document" class="qa-card purple"><span>Upload Doc</span> <i class="fa-solid fa-file-pdf"></i></a>
@@ -902,16 +2039,62 @@
                         <div style="font-size:10px; color:#64748b;">AI Engine</div>
                         <div class="status-val ai-active"><i class="fa-solid fa-brain"></i> Active</div>
                     </div>
+=======
+                <div class="quick-actions">
+                    <a href="/upload-feed" class="quick-action-btn blue">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Media
+                    </a>
+                    <a href="/upload-document" class="quick-action-btn purple">
+                        <i class="fa-solid fa-file-pdf"></i> Upload Document
+                    </a>
+                    <a href="/rag-chat" class="quick-action-btn pink" style="grid-column: span 2;">
+                        <i class="fa-solid fa-comments"></i> Ask AI Assistant
+                        <span style="margin-left:auto;font-size:11px;background:rgba(124,58,237,0.2);padding:2px 12px;border-radius:20px;color:#a78bfa;">New</span>
+                    </a>
+                    <a href="/export/pdf" class="quick-action-btn red">
+                        <i class="fa-solid fa-file-pdf"></i> Compliance Report
+                    </a>
+                    <a href="/export-knowledge-pdf" class="quick-action-btn orange">
+                        <i class="fa-solid fa-book"></i> Knowledge Report
+                    </a>
+                    <a href="/settings" class="quick-action-btn green" style="grid-column: span 2;">
+                        <i class="fa-solid fa-gear"></i> Settings
+                    </a>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
+                </div>
+
+                <div style="margin-top:16px;padding:14px 16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <div style="font-size:13px;color:#94a3b8;">System Status</div>
+                            <div style="font-size:14px;font-weight:600;color:#4ade80;">
+                                <i class="fa-solid fa-circle" style="font-size:10px;"></i> Operational
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:13px;color:#94a3b8;">AI Engine</div>
+                            <div style="font-size:14px;font-weight:600;color:#a78bfa;">
+                                <i class="fa-solid fa-brain"></i> Active
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- ===== FOOTER ===== -->
         <div class="footer">
+<<<<<<< HEAD
             VisionDesk AI • Smart PPE Detection &amp; Document Intelligence<br>
+=======
+            VisionDesk AI • Smart PPE Detection &amp; Document Intelligence
+            <br>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             <span>© 2026 All Rights Reserved</span>
         </div>
     </div>
 
+<<<<<<< HEAD
     <!-- ===== FULL SCREEN LIGHTBOX ===== -->
     <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
         <div style="position:relative; max-width:90vw; max-height:85vh; text-align:center;" onclick="event.stopPropagation()">
@@ -930,10 +2113,39 @@
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                 <button onclick="closeDeleteModal()" style="padding:8px 16px; border:none; border-radius:8px; background:rgba(255,255,255,0.08); color:#94a3b8;">Cancel</button>
                 <button id="confirmDeleteBtn" onclick="executeDelete()" style="padding:8px 18px; border:none; border-radius:8px; background:#ef4444; color:white;">Delete</button>
+=======
+    <!-- ===== IMAGE LIGHTBOX / POPUP ===== -->
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+        <div class="lightbox-content" id="lightboxContent">
+            <button class="lightbox-close" onclick="closeLightbox()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="lightboxImage" src="" alt="Detection Result">
+            <video id="lightboxVideo" controls style="display:none;"></video>
+            <div class="lightbox-info" id="lightboxInfo">
+                <strong id="lbFileName">File Name</strong>
+                <span id="lbStatus" style="margin-left:16px;"></span>
+                <span id="lbViolations" style="margin-left:16px;"></span>
             </div>
         </div>
     </div>
 
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color:#f87171;margin-right:8px;"></i> Confirm Delete</h3>
+            <p id="deleteMessage">Are you sure you want to delete <strong id="deleteFileName"></strong>? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn confirm" id="confirmDeleteBtn" onclick="executeDelete()">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
+            </div>
+        </div>
+    </div>
+
+<<<<<<< HEAD
     <script>
         function openVisualModal(src, fileName, status, type) {
             const overlay = document.getElementById('lightboxOverlay');
@@ -1025,13 +2237,257 @@
         }
 
         // Delete Functions
+=======
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // ===== SIDEBAR =====
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
+        }
+
+        function showNotification() {
+            showToast('📬 No new notifications', 'info');
+        }
+
+        // ===== LIGHTBOX / IMAGE POPUP =====
+        function openLightbox(element, fileName, status, violations) {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            const video = document.getElementById('lightboxVideo');
+            const info = document.getElementById('lightboxInfo');
+            
+            // Check if it's a video
+            const isVideo = element.tagName === 'VIDEO' || (element.src && element.src.match(/\.(mp4|avi|mov|webm)/i));
+            
+            if (isVideo) {
+                img.style.display = 'none';
+                video.style.display = 'block';
+                video.src = element.src || element.querySelector('source')?.src;
+                video.poster = element.poster || '';
+                video.load();
+                video.play();
+            } else {
+                img.style.display = 'block';
+                video.style.display = 'none';
+                img.src = element.src;
+                // If it's a thumbnail from a video, try to get the video source
+                if (element.src && element.src.includes('processed')) {
+                    const videoSrc = element.src.replace(/\.jpg|\.png|\.jpeg/, '.mp4');
+                    video.src = videoSrc;
+                }
+            }
+            
+            // Update info
+            document.getElementById('lbFileName').textContent = fileName || 'Unknown File';
+            
+            const statusEl = document.getElementById('lbStatus');
+            if (status === 'SAFE') {
+                statusEl.innerHTML = '<span style="color:#4ade80;">✅ SAFE</span>';
+            } else {
+                statusEl.innerHTML = '<span style="color:#f87171;">⚠️ VIOLATION</span>';
+            }
+            
+            const violationsEl = document.getElementById('lbViolations');
+            if (violations && violations.length > 0) {
+                let vText = '';
+                try {
+                    const vData = typeof violations === 'string' ? JSON.parse(violations) : violations;
+                    if (Array.isArray(vData)) {
+                        vText = vData.join(' • ');
+                    } else if (typeof vData === 'string') {
+                        vText = vData;
+                    }
+                } catch (e) {
+                    vText = String(violations);
+                }
+                violationsEl.innerHTML = '<span class="violation-text">🚨 ' + vText + '</span>';
+            } else {
+                violationsEl.innerHTML = '';
+            }
+            
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('lightboxOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Stop video
+            const video = document.getElementById('lightboxVideo');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // ===== COMPLIANCE STATS API =====
+        async function fetchComplianceStats() {
+            try {
+                const response = await fetch('/api/compliance-stats');
+                if (!response.ok) throw new Error('Failed to fetch stats');
+                const data = await response.json();
+                
+                document.getElementById('statTotal').textContent = data.total || 0;
+                document.getElementById('statViolations').textContent = data.violations || 0;
+                document.getElementById('statSafe').textContent = data.safe || 0;
+                document.getElementById('statCompliance').textContent = (data.compliance || 0) + '%';
+                
+                const compliance = data.compliance || 0;
+                document.getElementById('gaugeValue').textContent = compliance + '%';
+                updateGauge(compliance);
+                
+                const statusEl = document.getElementById('meterStatus');
+                statusEl.className = 'meter-status ' + (compliance >= 80 ? 'good' : compliance >= 50 ? 'warning' : 'danger');
+                statusEl.innerHTML = '<i class="fa-solid fa-circle"></i> ' + 
+                    (compliance >= 80 ? 'Excellent' : compliance >= 50 ? 'Needs Improvement' : 'Critical');
+                
+                updateMainChart(data.total || 0, data.safe || 0, data.violations || 0);
+                return data;
+            } catch (error) {
+                console.log('Error fetching compliance stats:', error);
+                // Set default values if API fails
+                document.getElementById('statTotal').textContent = '0';
+                document.getElementById('statViolations').textContent = '0';
+                document.getElementById('statSafe').textContent = '0';
+                document.getElementById('statCompliance').textContent = '100%';
+                document.getElementById('gaugeValue').textContent = '100%';
+                updateGauge(100);
+                return null;
+            }
+        }
+
+        function updateGauge(value) {
+            const chart = Chart.getChart('gaugeChart');
+            if (chart) {
+                chart.data.datasets[0].data = [value, 100 - value];
+                chart.data.datasets[0].backgroundColor = [
+                    value >= 80 ? '#4ade80' : value >= 50 ? '#fb923c' : '#f87171',
+                    'rgba(255,255,255,0.05)'
+                ];
+                chart.update();
+            }
+        }
+
+        function updateMainChart(total, safe, violations) {
+            const chart = Chart.getChart('mainChart');
+            if (chart) {
+                chart.data.datasets[0].data = [total, safe, violations];
+                chart.update();
+            }
+        }
+
+        // ===== FETCH RAG STATS =====
+        async function fetchRAGStats() {
+            try {
+                const r = await fetch('/api/rag/stats');
+                if (!r.ok) throw new Error('RAG API not available');
+                const data = await r.json();
+                document.getElementById('ragChunks').textContent = data.total_chunks || 0;
+            } catch (e) {
+                document.getElementById('ragChunks').textContent = '0';
+            }
+        }
+
+        // ===== FETCH DOCUMENT STATS =====
+        fetch('/knowledge-stats')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('docCount').textContent = data.total_documents || 0;
+            })
+            .catch(() => {});
+
+        // ===== INITIALIZE CHARTS =====
+        function initCharts() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total', 'Safe', 'Violations'],
+                    datasets: [{
+                        label: 'Detection Summary',
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(124, 58, 237, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderColor: ['#a78bfa', '#4ade80', '#f87171'],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 12 } } },
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 12 } } }
+                    }
+                }
+            });
+
+            const gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
+            new Chart(gaugeCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [0, 100],
+                        backgroundColor: ['#4ade80', 'rgba(255,255,255,0.05)'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    cutout: '85%',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            fetchComplianceStats();
+            fetchRAGStats();
+        }
+
+        // ===== DELETE FUNCTIONS =====
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         let deleteTargetId = null;
         let deleteType = 'record';
 
         function confirmDeleteRecord(id, name) {
             deleteTargetId = id;
+<<<<<<< HEAD
             deleteType = 'record';
             document.getElementById('deleteMessage').innerHTML = `Delete record for <strong>${name}</strong>?`;
+=======
+            deleteTargetName = name;
+            deleteType = 'record';
+            document.getElementById('deleteFileName').textContent = name;
+            document.getElementById('deleteMessage').innerHTML = 'Are you sure you want to delete <strong>' + name + '</strong>? This action cannot be undone.';
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             document.getElementById('deleteModal').classList.add('active');
         }
 
@@ -1045,22 +2501,66 @@
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.remove('active');
             deleteTargetId = null;
+<<<<<<< HEAD
+=======
+            document.getElementById('confirmDeleteBtn').disabled = false;
+            document.getElementById('confirmDeleteBtn').innerHTML = '<i class="fa-solid fa-trash-can"></i> Delete';
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         }
 
         async function executeDelete() {
             if (!deleteTargetId) return;
+<<<<<<< HEAD
             const url = deleteType === 'all' ? '/delete-all-visual-records' : `/delete-visual-record/${deleteTargetId}`;
             try {
                 const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
+=======
+            
+            const btn = document.getElementById('confirmDeleteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
+
+            let url = '/delete-visual-record/' + deleteTargetId;
+            if (deleteType === 'all') {
+                url = '/delete-all-visual-records';
+            }
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                 if (data.success) {
                     if (deleteType === 'all') {
+<<<<<<< HEAD
                         document.querySelectorAll('.record-card').forEach(c => c.remove());
                     } else {
                         document.getElementById(`record-${deleteTargetId}`)?.remove();
+=======
+                        document.querySelectorAll('.record-card').forEach(card => {
+                            card.classList.add('removing');
+                        });
+                        setTimeout(() => {
+                            document.querySelectorAll('.record-card').forEach(card => card.remove());
+                            fetchComplianceStats();
+                        }, 400);
+                    } else {
+                        const card = document.getElementById('record-' + deleteTargetId);
+                        if (card) {
+                            card.classList.add('removing');
+                            setTimeout(() => {
+                                card.remove();
+                                fetchComplianceStats();
+                            }, 400);
+                        }
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     }
                     fetchComplianceStats();
                 }
+<<<<<<< HEAD
             } catch(e){}
             closeDeleteModal();
         }
@@ -1075,6 +2575,40 @@
                 });
             });
         });
+=======
+            })
+            .catch(error => {
+                showToast('❌ Error: ' + error.message, 'error');
+                closeDeleteModal();
+            });
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDeleteModal();
+        });
+
+        // ===== SEARCH =====
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            document.querySelectorAll('.record-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(value) ? 'flex' : 'none';
+            });
+        });
+
+        // ===== REFRESH STATS EVERY 30 SECONDS =====
+        setInterval(fetchComplianceStats, 30000);
+        setInterval(fetchRAGStats, 30000);
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
     </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ import json
 import pathlib
 import urllib.request
 import shutil
+<<<<<<< HEAD
 import secrets
 from functools import wraps
 from datetime import datetime, timedelta
@@ -89,6 +90,8 @@ try:
 except ImportError:
     PDF_EXPORT_AVAILABLE = False
     print("⚠️ xhtml2pdf not installed")
+=======
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
 
 # ============================================
 # CONFIGURATION
@@ -178,6 +181,7 @@ if MONGO_AVAILABLE:
         db = None
 
 # ============================================
+<<<<<<< HEAD
 # CSRF PROTECTION
 # ============================================
 
@@ -258,6 +262,55 @@ def verify_user(username, password):
     if user['password_hash'] == hashlib.sha256(password.encode()).hexdigest():
         return user
     return None
+=======
+# YOLO MODEL LOADING - IMPROVED VERSION
+# ============================================
+
+project_root = pathlib.Path(__file__).parent.resolve()
+model_path = os.path.join(project_root, 'ppe_yolov8.pt')
+
+def download_ppe_model():
+    """Download a pre-trained PPE detection model"""
+    try:
+        # Try multiple sources for PPE model
+        model_urls = [
+            "https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n-ppe.pt",
+            "https://huggingface.co/ultralytics/yolov8/resolve/main/yolov8n.pt"
+        ]
+        
+        for url in model_urls:
+            try:
+                print(f"📥 Attempting to download from: {url}")
+                urllib.request.urlretrieve(url, model_path)
+                print("✅ Model downloaded successfully")
+                return YOLO(model_path)
+            except Exception as e:
+                print(f"⚠️ Failed to download from {url}: {e}")
+                continue
+        
+        return None
+    except Exception as e:
+        print(f"⚠️ Could not download PPE model: {e}")
+        return None
+
+# Try to load custom model first
+try:
+    if os.path.exists(model_path):
+        model = YOLO(model_path)
+        print("✅ Custom PPE model loaded successfully")
+    else:
+        print("⚠️ Custom model not found, attempting to download...")
+        model = download_ppe_model()
+        
+        if model is None:
+            # Fallback to base YOLO model
+            print("📥 Using base YOLOv8n model...")
+            model = YOLO('yolov8n.pt')
+            print("✅ Base YOLOv8n model loaded successfully")
+except Exception as e:
+    print(f"⚠️ Could not load YOLO model: {e}")
+    model = None
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
 
 # ============================================
 # SEED ADMIN USER
@@ -720,6 +773,36 @@ def live_detection():
 # UPLOAD FEED ROUTE - DYNAMIC PPE PARSING
 # ============================================
 
+@app.route('/api/compliance-stats', methods=['GET'])
+def compliance_stats():
+    """API endpoint for compliance statistics"""
+    if 'username' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    try:
+        # Get all records for the current user
+        records = list(records_col.find({'uploaded_by': session['username']}))
+        
+        total = len(records)
+        violations = sum(1 for r in records if r.get('status') != 'SAFE')
+        safe = total - violations
+        compliance = round((safe / total * 100) if total > 0 else 100)
+        
+        return jsonify({
+            'total': total,
+            'violations': violations,
+            'safe': safe,
+            'compliance': compliance
+        })
+    except Exception as e:
+        print(f"Error getting compliance stats: {e}")
+        return jsonify({
+            'total': 0,
+            'violations': 0,
+            'safe': 0,
+            'compliance': 100
+        }), 200
+
 @app.route('/upload-feed', methods=['GET', 'POST'])
 @login_required
 def upload_feed():
@@ -747,6 +830,7 @@ def upload_feed():
     rendered_name = 'processed_' + filename
     save_destination = os.path.join(RESULT_FOLDER, rendered_name)
 
+<<<<<<< HEAD
     is_video = filename.lower().endswith(('.mp4', '.avi', '.mov', '.webm'))
     is_real_model = hasattr(model, 'predict') or type(model).__name__ != 'DummyModel'
     
@@ -875,12 +959,213 @@ def upload_feed():
         shutil.copy2(disk_path, save_destination)
 
     # Violation Checks
+=======
+    # PPE mapping
+    ppe_mapping = {
+        'person': 'person', 'people': 'person', 'worker': 'person',
+        'helmet': 'helmet', 'hardhat': 'helmet', 'head': 'helmet',
+        'vest': 'vest', 'jacket': 'vest', 'safety vest': 'vest',
+        'mask': 'mask', 'facemask': 'mask', 'face_mask': 'mask'
+    }
+
+    is_video = target_file.filename.lower().endswith(('.mp4', '.avi', '.mov'))
+    
+    # ============================================
+    # OPTIMIZED VIDEO PROCESSING
+    # ============================================
+    if is_video:
+        print(f"🎬 Processing video: {target_file.filename}")
+        
+        # Open video
+        video_capture = cv2.VideoCapture(disk_path)
+        if not video_capture.isOpened():
+            return "Error: Could not open video file", 400
+            
+        frame_width = int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+        frame_height = int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = int(video_capture.get(cv2.CAP_PROP_FPS)) if int(video_capture.get(cv2.CAP_PROP_FPS)) > 0 else 30
+        total_frames = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        # Calculate duration
+        duration = total_frames / fps if fps > 0 else 0
+        print(f"📊 Video: {duration:.1f}s, {total_frames} frames, {fps} fps")
+        
+        # OPTIMIZATION 1: Adaptive sample rate based on video length
+        if duration < 5:       # Very short video
+            sample_rate = 2
+        elif duration < 15:    # Short video
+            sample_rate = 5
+        elif duration < 30:    # Medium video
+            sample_rate = 10
+        elif duration < 60:    # Long video
+            sample_rate = 20
+        else:                  # Very long video
+            sample_rate = 30
+        
+        print(f"📊 Processing every {sample_rate}th frame")
+        
+        # OPTIMIZATION 2: Reduce resolution for faster processing
+        max_dim = 640
+        if frame_width > max_dim or frame_height > max_dim:
+            scale = max_dim / max(frame_width, frame_height)
+            new_width = int(frame_width * scale)
+            new_height = int(frame_height * scale)
+            print(f"📐 Resizing from {frame_width}x{frame_height} to {new_width}x{new_height}")
+        else:
+            new_width, new_height = frame_width, frame_height
+        
+        # Setup video writer
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        video_writer = cv2.VideoWriter(save_destination, fourcc, fps, (new_width, new_height))
+        
+        frame_count = 0
+        processed_count = 0
+        
+        # Track unique detections
+        detections = {'workers': set(), 'helmets': set(), 'vests': set(), 'masks': set()}
+        
+        # OPTIMIZATION 3: Use smaller image size for inference
+        inference_size = 320
+        
+        while video_capture.isOpened():
+            success, frame = video_capture.read()
+            if not success:
+                break
+            
+            frame_count += 1
+            
+            # Process every Nth frame
+            if frame_count % sample_rate == 0:
+                processed_count += 1
+                
+                # Resize if needed
+                if scale != 1.0:
+                    frame_small = cv2.resize(frame, (new_width, new_height))
+                else:
+                    frame_small = frame
+                
+                # Run detection
+                if model is not None:
+                    try:
+                        # OPTIMIZATION 4: Use smaller image size and lower confidence
+                        results = model(frame_small, conf=0.3, imgsz=inference_size)
+                        
+                        for box in results[0].boxes:
+                            tag_class = model.names[int(box.cls[0])]
+                            tag_lower = tag_class.lower().strip()
+                            
+                            # Get unique ID for this detection
+                            x1, y1, x2, y2 = box.xyxy[0].tolist()
+                            box_id = f"{int(x1)},{int(y1)},{int(x2)},{int(y2)}"
+                            
+                            # Map to category
+                            mapped = None
+                            for key, value in ppe_mapping.items():
+                                if key in tag_lower:
+                                    mapped = value
+                                    break
+                            
+                            if mapped == 'person':
+                                detections['workers'].add(box_id)
+                            elif mapped == 'helmet':
+                                detections['helmets'].add(box_id)
+                            elif mapped == 'vest':
+                                detections['vests'].add(box_id)
+                            elif mapped == 'mask':
+                                detections['masks'].add(box_id)
+                        
+                        # Draw annotations
+                        annotated = results[0].plot()
+                        if scale != 1.0:
+                            annotated = cv2.resize(annotated, (frame_width, frame_height))
+                    except Exception as e:
+                        print(f"⚠️ Detection error: {e}")
+                        annotated = frame
+                else:
+                    # Fallback: simple face detection
+                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+                    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+                    for (x, y, w, h) in faces:
+                        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                        detections['workers'].add(f"{x},{y},{x+w},{y+h}")
+                        detections['helmets'].add(f"{x},{y},{x+w},{y+h}")  # Assume helmets
+                    annotated = frame
+            else:
+                annotated = frame
+            
+            video_writer.write(annotated)
+            
+            # OPTIMIZATION 5: Progress update every 2%
+            if frame_count % max(1, int(total_frames * 0.02)) == 0:
+                progress = (frame_count / total_frames) * 100
+                print(f"📊 Progress: {progress:.1f}% ({frame_count}/{total_frames} frames)")
+        
+        video_capture.release()
+        video_writer.release()
+        
+        # Get final counts
+        count_workers = len(detections['workers'])
+        count_helmets = len(detections['helmets'])
+        count_vests = len(detections['vests'])
+        count_masks = len(detections['masks'])
+        
+        print(f"✅ Processing complete! Processed {processed_count} frames")
+        print(f"📊 Results: Workers={count_workers}, Helmets={count_helmets}, Vests={count_vests}, Masks={count_masks}")
+    
+    # ============================================
+    # IMAGE PROCESSING
+    # ============================================
+    else:
+        print(f"🖼️ Processing image: {target_file.filename}")
+        
+        if model is not None:
+            # OPTIMIZATION 6: Use smaller image size for faster inference
+            results = model(disk_path, conf=0.3, imgsz=640)
+            for item in results:
+                for box in item.boxes:
+                    tag_class = model.names[int(box.cls[0])]
+                    extracted_tags.append({'tag': tag_class, 'confidence': float(box.conf[0])})
+                    tag_lower = tag_class.lower().strip()
+                    
+                    mapped = None
+                    for key, value in ppe_mapping.items():
+                        if key in tag_lower:
+                            mapped = value
+                            break
+                    
+                    if mapped == 'person':
+                        count_workers += 1
+                    elif mapped == 'helmet':
+                        count_helmets += 1
+                    elif mapped == 'vest':
+                        count_vests += 1
+                    elif mapped == 'mask':
+                        count_masks += 1
+            
+            results[0].save(save_destination)
+        else:
+            # Fallback
+            import shutil
+            shutil.copy2(disk_path, save_destination)
+            count_workers = 3
+            count_helmets = 3
+            count_vests = 2
+            count_masks = 1
+        
+        print("✅ Image processing complete")
+
+    # ============================================
+    # DETERMINE COMPLIANCE
+    # ============================================
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
     compliance_state = 'SAFE'
     violation_incident_reports = []
     
     if count_workers > 0:
         if count_helmets < count_workers:
             compliance_state = 'VIOLATION DETECTED'
+<<<<<<< HEAD
             violation_incident_reports.append('Missing helmet protective gear')
         if count_vests < count_workers:
             compliance_state = 'VIOLATION DETECTED'
@@ -892,6 +1177,22 @@ def upload_feed():
     record = {
         'uploaded_by': session.get('username'),
         'file_name': filename,
+=======
+            violation_incident_reports.append('Hazard Alert: Missing helmet protective gear.')
+        if count_vests < count_workers:
+            compliance_state = 'VIOLATION DETECTED'
+            if len(violation_incident_reports) < 2:
+                violation_incident_reports.append('Hazard Alert: Missing high-visibility vest safety gear.')
+        if count_masks < count_workers:
+            compliance_state = 'VIOLATION DETECTED'
+            if len(violation_incident_reports) < 3:
+                violation_incident_reports.append('Hazard Alert: Missing face mask protective gear.')
+
+    # Save to database
+    records_col.insert_one({
+        'uploaded_by': session['username'],
+        'file_name': target_file.filename,
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         'processed_url': '/' + save_destination,
         'status': compliance_state,
         'violations': violation_incident_reports,
@@ -901,7 +1202,69 @@ def upload_feed():
             'vests': count_vests, 
             'masks': count_masks
         },
+<<<<<<< HEAD
         'upload_date': datetime.now()
+=======
+        'raw_payload': extracted_tags,
+        'upload_date': datetime.datetime.now()
+    })
+    
+    print(f"✅ Record saved to database")
+    return redirect(url_for('index'))
+
+@app.route('/upload-document', methods=['GET', 'POST'])
+def upload_document():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'GET':
+        user_docs = list(documents_col.find({'uploaded_by': session['username']}).sort('_id', -1))
+        for doc in user_docs:
+            if 'status' not in doc:
+                import random
+                statuses = ['Processed', 'Analyzing', 'Completed']
+                doc['status'] = statuses[random.randint(0, 2)]
+                if doc['status'] == 'Analyzing':
+                    doc['progress'] = random.randint(30, 90)
+                else:
+                    doc['progress'] = 100
+        return render_template('documents.html', user=session['username'], role=session['role'], documents=user_docs)
+    
+    if 'document' not in request.files:
+        return jsonify({'error': 'No file uploaded'}), 400
+    
+    file = request.files['document']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+    
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['DOCUMENT_FOLDER'], filename)
+    file.save(file_path)
+    
+    knowledge_entry, message = process_document(file_path, filename)
+    
+    if knowledge_entry is None:
+        return jsonify({'error': message}), 400
+    
+    sections = knowledge_entry.get('metadata', {}).get('sections', [])
+    if not sections and knowledge_entry.get('full_text'):
+        text = knowledge_entry.get('full_text', '')
+        section_matches = re.findall(r'(?i)(section|chapter|part)\s+\d+\.?\d*[:.]?\s*([^\n]+)', text)
+        if section_matches:
+            sections = [f"{match[0]} {match[1].strip()}" for match in section_matches[:5]]
+    
+    document_record = {
+        'uploaded_by': session['username'],
+        'filename': filename,
+        'file_path': file_path,
+        'upload_date': datetime.datetime.now(),
+        'knowledge_entry': knowledge_entry,
+        'processing_status': 'completed',
+        'status': 'Processed',
+        'progress': 100,
+        'sections': sections[:5],
+        'rag_indexed': knowledge_entry.get('rag_indexed', False)
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
     }
     
     if records_col is not None:
@@ -1542,6 +1905,30 @@ def internal_error(e):
     if request.is_json:
         return jsonify({'error': 'Internal server error'}), 500
     return render_template('error.html', error='Internal server error'), 500
+
+# ============================================
+# TEST ROUTE
+# ============================================
+
+@app.route('/test-model')
+def test_model():
+    """Test if the YOLO model is loaded properly"""
+    if model is None:
+        return jsonify({'status': 'error', 'message': 'Model not loaded'})
+    
+    return jsonify({
+        'status': 'ok',
+        'model_type': type(model).__name__,
+        'model_info': str(model)
+    })
+
+@app.route('/settings')
+def settings():
+    """Settings page"""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    return render_template('settings.html', user=session['username'], role=session['role'])
 
 # ============================================
 # MAIN

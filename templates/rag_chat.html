@@ -325,6 +325,9 @@
     </div>
 </div>
 
+<!-- ============================================ -->
+<!-- JAVASCRIPT - CORRECTLY PLACED AT THE END     -->
+<!-- ============================================ -->
 <script>
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
@@ -340,6 +343,7 @@
         const div = document.createElement('div');
         div.className = `message ${sender}`;
         
+        // Convert newlines to <br> and handle bold text
         let html = text
             .replace(/\n/g, '<br>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -367,12 +371,18 @@
         const query = chatInput.value.trim();
         if (!query) return;
 
+        // Disable input while processing
         chatInput.disabled = true;
         sendBtn.disabled = true;
         chatInput.value = '';
 
+        // Add user message
         addMessage(query, 'user', null, new Date().toLocaleTimeString());
 
+<<<<<<< HEAD
+=======
+        // Show typing indicator with context-specific message
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         typingIndicator.classList.add('active');
         const queryLower = query.toLowerCase();
         let statusMessage = '🔍 Analyzing your query...';
@@ -401,6 +411,10 @@
             typingIndicator.classList.remove('active');
 
             if (data.response) {
+<<<<<<< HEAD
+=======
+                // Show what action was taken
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                 let sourceInfo = '🤖 VisionDesk Agent';
                 if (data.action) {
                     const actionLabels = {
@@ -434,11 +448,13 @@
             addMessage('❌ Error: ' + error.message, 'agent');
         }
 
+        // Re-enable input
         chatInput.disabled = false;
         sendBtn.disabled = false;
         chatInput.focus();
     }
 
+    // Auto-focus on page load
     chatInput.focus();
 </script>
 

@@ -66,13 +66,18 @@
         .toggle.active .handle { left: 25px; background: #a78bfa; }
         
         .btn {
+<<<<<<< HEAD
             padding: 10px 22px;
+=======
+            padding: 8px 20px;
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             border: none;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 13px;
+<<<<<<< HEAD
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -81,6 +86,13 @@
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.3); }
         .btn-danger { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
         .btn-danger:hover { background: rgba(239,68,68,0.4); transform: scale(1.02); }
+=======
+        }
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #06b6d4); color: white; }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(124,58,237,0.3); }
+        .btn-danger { background: rgba(239,68,68,0.2); color: #f87171; }
+        .btn-danger:hover { background: rgba(239,68,68,0.3); }
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         
         .back-link {
             color: #94a3b8;
@@ -90,7 +102,10 @@
             gap: 8px;
             font-size: 14px;
             margin-bottom: 20px;
+<<<<<<< HEAD
             transition: color 0.2s;
+=======
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         }
         .back-link:hover { color: #e2e8f0; }
         
@@ -99,7 +114,10 @@
             .container { padding: 0 16px; }
         }
     </style>
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='redesign.css') }}">
+=======
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
 </head>
 <body>
     <div class="container">
@@ -115,7 +133,11 @@
             <h3><i class="fa-solid fa-sliders"></i> General</h3>
             <div class="setting-item">
                 <span class="label">Theme</span>
+<<<<<<< HEAD
                 <span class="value">Dark <i class="fa-solid fa-moon" style="color:#a78bfa; margin-left:4px;"></i></span>
+=======
+                <span class="value">Dark <i class="fa-solid fa-moon" style="color:#a78bfa;"></i></span>
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             </div>
             <div class="setting-item">
                 <span class="label">Language</span>
@@ -128,19 +150,31 @@
             <h3><i class="fa-regular fa-bell"></i> Notifications</h3>
             <div class="setting-item">
                 <span class="label">Email Alerts</span>
+<<<<<<< HEAD
                 <div class="toggle active" id="toggle-email" onclick="this.classList.toggle('active')">
+=======
+                <div class="toggle active" onclick="this.classList.toggle('active')">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     <div class="handle"></div>
                 </div>
             </div>
             <div class="setting-item">
                 <span class="label">Violation Alerts</span>
+<<<<<<< HEAD
                 <div class="toggle active" id="toggle-violation" onclick="this.classList.toggle('active')">
+=======
+                <div class="toggle active" onclick="this.classList.toggle('active')">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     <div class="handle"></div>
                 </div>
             </div>
             <div class="setting-item">
                 <span class="label">Weekly Reports</span>
+<<<<<<< HEAD
                 <div class="toggle" id="toggle-weekly" onclick="this.classList.toggle('active')">
+=======
+                <div class="toggle" onclick="this.classList.toggle('active')">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     <div class="handle"></div>
                 </div>
             </div>
@@ -148,6 +182,7 @@
 
         <!-- AI & Detection Settings -->
         <div class="settings-card">
+<<<<<<< HEAD
             <h3><i class="fa-solid fa-brain"></i> AI &amp; Detection</h3>
             <div class="setting-item">
                 <span class="label">PPE Detection Confidence</span>
@@ -156,12 +191,26 @@
             <div class="setting-item">
                 <span class="label">Auto-Save Results</span>
                 <div class="toggle active" id="toggle-autosave" onclick="this.classList.toggle('active')">
+=======
+            <h3><i class="fa-solid fa-brain"></i> AI & Detection</h3>
+            <div class="setting-item">
+                <span class="label">PPE Detection Confidence</span>
+                <span class="value">0.35</span>
+            </div>
+            <div class="setting-item">
+                <span class="label">Auto-Save Results</span>
+                <div class="toggle active" onclick="this.classList.toggle('active')">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     <div class="handle"></div>
                 </div>
             </div>
             <div class="setting-item">
                 <span class="label">Enable RAG</span>
+<<<<<<< HEAD
                 <div class="toggle active" id="toggle-rag" onclick="this.classList.toggle('active')">
+=======
+                <div class="toggle active" onclick="this.classList.toggle('active')">
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                     <div class="handle"></div>
                 </div>
             </div>
@@ -175,34 +224,53 @@
                 <span class="value">30 days</span>
             </div>
             <div class="setting-item" style="border-bottom: none;">
+<<<<<<< HEAD
                 <div>
                     <span class="label" style="display:block; font-weight:600; color:#f1f5f9;">Clear All Data</span>
                     <small style="color:#64748b;">Permanently delete all detection logs, knowledge chunks, and uploaded documents.</small>
                 </div>
                 <button class="btn btn-danger" id="clearBtn" onclick="handleClearData()">
                     <i class="fa-solid fa-trash-can"></i> Clear All
+=======
+                <span class="label">Clear All Data</span>
+                <button class="btn btn-danger" onclick="if(confirm('Delete all data?')){showToast('Data cleared!','success');}">
+                    <i class="fa-solid fa-trash-can"></i> Clear
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
                 </button>
             </div>
         </div>
 
         <!-- Actions -->
+<<<<<<< HEAD
         <div style="display:flex; gap:12px; margin-top:12px; flex-wrap:wrap;">
             <button class="btn btn-primary" onclick="saveSettings()">
                 <i class="fa-solid fa-check"></i> Save Settings
             </button>
             <button class="btn" style="background:rgba(255,255,255,0.08); color:#94a3b8;" onclick="resetDefaults()">
                 <i class="fa-solid fa-rotate-left"></i> Reset Defaults
+=======
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="showToast('Settings saved! ✅','success')">
+                <i class="fa-solid fa-check"></i> Save Settings
+            </button>
+            <button class="btn" style="background:rgba(255,255,255,0.05);color:#94a3b8;" onclick="showToast('Settings reset to default 🔄','info')">
+                <i class="fa-solid fa-rotate"></i> Reset Defaults
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             </button>
         </div>
     </div>
 
     <script>
+<<<<<<< HEAD
         // Toast Notification Function
+=======
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         function showToast(msg, type='info') {
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed; top: 20px; right: 20px; padding: 14px 24px;
                 border-radius: 12px; color: white; font-weight: 500;
+<<<<<<< HEAD
                 z-index: 9999; 
                 background: ${type === 'success' ? 'rgba(34,197,94,0.95)' : type === 'error' ? 'rgba(239,68,68,0.95)' : 'rgba(124,58,237,0.95)'};
                 border: 1px solid rgba(255,255,255,0.1);
@@ -291,6 +359,20 @@
                 } catch(e) {}
             }
         });
+=======
+                z-index: 9999; background: ${type === 'success' ? 'rgba(34,197,94,0.9)' : type === 'error' ? 'rgba(239,68,68,0.9)' : 'rgba(124,58,237,0.9)'};
+                border: 1px solid rgba(255,255,255,0.1);
+                box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+                transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                max-width: 400px;
+            `;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100);
+            setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3500);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
     </script>
 </body>
 </html>

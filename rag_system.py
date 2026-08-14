@@ -148,12 +148,18 @@ class RAGSystem:
             query_vec = self.vectorizer.transform([query])
             similarities = cosine_similarity(query_vec, self.doc_vectors).flatten()
             
+<<<<<<< HEAD
             # Search a wider pool so we still have enough candidates after removing duplicates
             top_indices = similarities.argsort()[-(top_k * 4):][::-1]
 
+=======
+            top_indices = similarities.argsort()[-top_k:][::-1]
+            
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             results = []
             seen_text = set()
             for idx in top_indices:
+<<<<<<< HEAD
                 if similarities[idx] <= 0.01:
                     continue
                 chunk_text = self.documents[idx]['text']
@@ -169,6 +175,16 @@ class RAGSystem:
                 if len(results) >= top_k:
                     break
 
+=======
+                if similarities[idx] > 0.01:
+                    results.append({
+                        'text': self.documents[idx]['text'],
+                        'metadata': self.documents[idx]['metadata'],
+                        'score': float(similarities[idx]),
+                        'chunk_id': self.documents[idx]['chunk_id']
+                    })
+            
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
             return results
         except Exception as e:
             print(f"⚠️ Search error: {e}")
@@ -178,10 +194,13 @@ class RAGSystem:
         results = self.search(query, top_k)
         if not results:
             return "No relevant documents found."
+<<<<<<< HEAD
 
         # If even the best match is weak, say so honestly instead of presenting it as a confident answer
         if results[0]['score'] < 0.15:
             return "No strong match found in the knowledge base for this specific question. Try rephrasing, or ask about a topic more directly covered in your uploaded documents."
+=======
+>>>>>>> 4eb6a0792b22b4c4da81d2188e1c97efe15fc32a
         
         parts = ["📚 **Relevant Information from Knowledge Base:**\n"]
         for i, r in enumerate(results, 1):

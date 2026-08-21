@@ -2,365 +2,257 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VisionDesk AI | Register</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-
-*{
-
-margin:0;
-
-padding:0;
-
-box-sizing:border-box;
-
-font-family:Poppins,sans-serif;
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-body{
-
-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:#08111f;
-
-overflow:hidden;
-
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #08111f;
+    padding: 16px 10px;
+    overflow-x: hidden;
 }
 
-/* Background */
-
-body::before{
-
-content:"";
-
-position:absolute;
-
-width:500px;
-
-height:500px;
-
-background:#2563eb;
-
-filter:blur(180px);
-
-border-radius:50%;
-
-top:-150px;
-
-left:-150px;
-
-opacity:.45;
-
+/* Background Glowing Orbs */
+body::before {
+    content: "";
+    position: fixed;
+    width: 450px;
+    height: 450px;
+    background: #2563eb;
+    filter: blur(160px);
+    border-radius: 50%;
+    top: -120px;
+    left: -120px;
+    opacity: .35;
+    pointer-events: none;
 }
 
-body::after{
-
-content:"";
-
-position:absolute;
-
-width:450px;
-
-height:450px;
-
-background:#06b6d4;
-
-filter:blur(180px);
-
-border-radius:50%;
-
-bottom:-120px;
-
-right:-100px;
-
-opacity:.35;
-
+body::after {
+    content: "";
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: #06b6d4;
+    filter: blur(160px);
+    border-radius: 50%;
+    bottom: -100px;
+    right: -80px;
+    opacity: .3;
+    pointer-events: none;
 }
 
 /* Card */
-
-.card-register{
-
-width:460px;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(18px);
-
-border-radius:25px;
-
-padding:40px;
-
-border:1px solid rgba(255,255,255,.1);
-
-box-shadow:0 25px 60px rgba(0,0,0,.45);
-
-position:relative;
-
-z-index:5;
-
-animation:fade .7s;
-
+.card-register {
+    width: 100%;
+    max-width: 430px;
+    background: rgba(255, 255, 255, .06);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    padding: 22px 26px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+    position: relative;
+    z-index: 5;
+    animation: fade .5s ease-out;
 }
 
-@keyframes fade{
-
-from{
-
-opacity:0;
-
-transform:translateY(30px);
-
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
+.logo {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 8px auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, .4);
 }
 
+h2 {
+    text-align: center;
+    font-size: 21px;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 2px;
 }
 
-.logo{
-
-width:90px;
-
-height:90px;
-
-margin:auto;
-
-border-radius:50%;
-
-background:linear-gradient(135deg,#2563eb,#06b6d4);
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:38px;
-
-color:white;
-
-box-shadow:0 15px 35px rgba(37,99,235,.5);
-
+.subtitle {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 14px;
 }
 
-h2{
-
-text-align:center;
-
-margin-top:18px;
-
-color:white;
-
-font-weight:700;
-
+.input-group {
+    margin-bottom: 10px;
+    position: relative;
 }
 
-.subtitle{
-
-text-align:center;
-
-color:#cbd5e1;
-
-margin-bottom:30px;
-
+/* Left input icons */
+.input-group i.input-icon {
+    position: absolute;
+    left: 14px !important;
+    right: auto !important;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #38bdf8;
+    z-index: 10;
+    font-size: 13px;
 }
 
-.input-group{
-
-margin-bottom:18px;
-
-position:relative;
-
+/* Right toggle eye icon */
+.input-group i.eye {
+    position: absolute;
+    right: 14px !important;
+    left: auto !important;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    z-index: 10;
+    font-size: 13px;
+    transition: color .2s;
 }
 
-.input-group i{
-
-position:absolute;
-
-left:15px;
-
-top:17px;
-
-color:#38bdf8;
-
+.input-group i.eye:hover {
+    color: white;
 }
 
-.form-control{
-
-height:52px;
-
-padding-left:45px;
-
-background:rgba(255,255,255,.08);
-
-border:none;
-
-color:white;
-
+.form-control {
+    height: 42px;
+    padding-left: 38px !important;
+    padding-right: 38px !important;
+    background: rgba(255, 255, 255, .07) !important;
+    border: 1px solid rgba(255, 255, 255, .08) !important;
+    color: white !important;
+    font-size: 13px;
+    border-radius: 10px !important;
 }
 
-.form-control:focus{
-
-background:rgba(255,255,255,.12);
-
-color:white;
-
-box-shadow:0 0 0 .2rem rgba(37,99,235,.3);
-
+.form-control:focus {
+    background: rgba(255, 255, 255, .12) !important;
+    border-color: rgba(56, 189, 248, .5) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .25) !important;
 }
 
-.form-control::placeholder{
-
-color:#cbd5e1;
-
+.form-control::placeholder {
+    color: #94a3b8;
 }
 
-.eye{
-
-position:absolute;
-
-right:18px;
-
-top:17px;
-
-cursor:pointer;
-
-color:white;
-
+.strength {
+    height: 4px;
+    background: rgba(255, 255, 255, .1);
+    border-radius: 6px;
+    margin-top: 5px;
+    overflow: hidden;
+    width: 100%;
 }
 
-.strength{
-
-height:8px;
-
-background:#1e293b;
-
-border-radius:10px;
-
-margin-top:10px;
-
-overflow:hidden;
-
+.bar {
+    height: 100%;
+    width: 0;
+    background: #ef4444;
+    transition: .3s;
 }
 
-.bar{
-
-height:100%;
-
-width:0;
-
-background:red;
-
-transition:.3s;
-
+/* Compact checklist */
+.password-hint {
+    font-size: 10.5px;
+    color: #94a3b8;
+    margin-top: 3px;
+    margin-bottom: 6px;
 }
 
-.btn-register{
-
-width:100%;
-
-height:54px;
-
-border:none;
-
-border-radius:12px;
-
-font-size:17px;
-
-font-weight:600;
-
-background:linear-gradient(90deg,#2563eb,#06b6d4);
-
-color:white;
-
-margin-top:20px;
-
-transition:.3s;
-
+.password-hint ul {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 6px;
 }
 
-.btn-register:hover{
-
-transform:translateY(-3px);
-
-box-shadow:0 15px 35px rgba(37,99,235,.45);
-
+.password-hint li {
+    list-style: none;
+    font-size: 10.5px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
-.footer{
+.password-hint li.valid { color: #22c55e; }
+.password-hint li.invalid { color: #ef4444; }
 
-text-align:center;
-
-margin-top:20px;
-
-color:#cbd5e1;
-
+.btn-register {
+    width: 100%;
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: white;
+    margin-top: 8px;
+    transition: .25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.footer a{
-
-color:#38bdf8;
-
-text-decoration:none;
-
-font-weight:600;
-
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, .45);
 }
 
-.footer a:hover{
-
-text-decoration:underline;
-
+.footer {
+    text-align: center;
+    margin-top: 12px;
+    color: #94a3b8;
+    font-size: 12px;
 }
- .password-hint {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 5px;
-        }
-        .password-hint ul {
-            margin: 5px 0 0 20px;
-            padding: 0;
-        }
-        .password-hint li {
-            list-style: none;
-            font-size: 12px;
-            color: #64748b;
-        }
-        .password-hint li.valid {
-            color: #22c55e;
-        }
-        .password-hint li.invalid {
-            color: #ef4444;
-        }
-    </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='redesign.css') }}">
+
+.footer a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
 </head>
+
 <body>
     <div class="card-register">
         <div class="logo">
@@ -373,7 +265,7 @@ text-decoration:underline;
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }}" style="border-radius: 12px; margin-bottom: 15px;">
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }}" style="border-radius: 10px; padding: 6px 12px; font-size: 12px; margin-bottom: 10px;">
                         <i class="fa-solid fa-{{ 'circle-exclamation' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }}"></i>
                         {{ message }}
                     </div>
@@ -381,16 +273,16 @@ text-decoration:underline;
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('register') }}">
+        <form method="POST" action="{{ url_for('register') }}" onsubmit="return validatePasswords()">
             <!-- CSRF Token -->
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="csrf_token" value="{{ session.get('csrf_token', '') }}">
 
             <!-- Username Field -->
             <div class="input-group">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user input-icon"></i>
                 <input type="text" name="username" class="form-control" 
-                       placeholder="Username (letters, numbers, underscore)"
-                       value="{{ form.username.data if form.username.data else '' }}"
+                       placeholder="Username (letters, numbers, _)"
+                       value="{{ request.form.get('username', '') }}"
                        pattern="[a-zA-Z0-9_]+"
                        title="Only letters, numbers, and underscores allowed"
                        required>
@@ -398,42 +290,48 @@ text-decoration:underline;
 
             <!-- Email Field -->
             <div class="input-group">
-                <i class="fa-solid fa-envelope"></i>
+                <i class="fa-solid fa-envelope input-icon"></i>
                 <input type="email" name="email" class="form-control" 
                        placeholder="Email Address"
-                       value="{{ form.email.data if form.email.data else '' }}"
+                       value="{{ request.form.get('email', '') }}"
                        required>
             </div>
 
             <!-- Password Field -->
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="password" name="password" 
-                       class="form-control" placeholder="Password" 
-                       required minlength="8">
-                <i class="fa-solid fa-eye eye" onclick="togglePassword()"></i>
+            <div class="input-group" style="display: flex; flex-direction: column; margin-bottom: 4px;">
+                <div style="position: relative; width: 100%;">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" id="password" name="password" 
+                           class="form-control" placeholder="Password" 
+                           required minlength="8">
+                    <i class="fa-solid fa-eye eye" onclick="togglePassword('password', this)"></i>
+                </div>
                 <div class="strength">
                     <div class="bar" id="bar"></div>
                 </div>
             </div>
 
-            <!-- Password Strength Hints -->
+            <!-- Compact Password Strength Hints -->
             <div class="password-hint" id="passwordHints">
                 <ul>
-                    <li id="hint-length">❌ At least 8 characters</li>
-                    <li id="hint-upper">❌ At least one uppercase letter</li>
-                    <li id="hint-lower">❌ At least one lowercase letter</li>
-                    <li id="hint-number">❌ At least one number</li>
-                    <li id="hint-special">❌ At least one special character</li>
+                    <li id="hint-length"><span>❌</span> 8+ chars</li>
+                    <li id="hint-upper"><span>❌</span> 1 uppercase</li>
+                    <li id="hint-lower"><span>❌</span> 1 lowercase</li>
+                    <li id="hint-number"><span>❌</span> 1 number</li>
+                    <li id="hint-special" style="grid-column: span 2;"><span>❌</span> 1 special symbol</li>
                 </ul>
             </div>
 
             <!-- Confirm Password Field -->
-            <div class="input-group" style="margin-top: 10px;">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="confirm_password" 
+            <div class="input-group">
+                <i class="fa-solid fa-shield-halved input-icon"></i>
+                <input type="password" id="confirm_password" name="confirm_password" 
                        class="form-control" placeholder="Confirm Password" 
-                       required>
+                       required minlength="8">
+                <i class="fa-solid fa-eye eye" onclick="togglePassword('confirm_password', this)"></i>
+            </div>
+            <div id="matchError" style="display:none; color:#ef4444; font-size:11px; margin-top:-6px; margin-bottom:6px;">
+                <i class="fa-solid fa-circle-xmark"></i> Passwords do not match
             </div>
 
             <button class="btn-register" type="submit">
@@ -449,24 +347,23 @@ text-decoration:underline;
     </div>
 
     <script>
-        // Password toggle
-        function togglePassword() {
-            const password = document.getElementById("password");
-            const eye = document.querySelector(".eye");
-            if (password.type === "password") {
-                password.type = "text";
-                eye.classList.remove("fa-eye");
-                eye.classList.add("fa-eye-slash");
+        function togglePassword(inputId, iconEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                iconEl.classList.remove("fa-eye");
+                iconEl.classList.add("fa-eye-slash");
             } else {
-                password.type = "password";
-                eye.classList.remove("fa-eye-slash");
-                eye.classList.add("fa-eye");
+                input.type = "password";
+                iconEl.classList.remove("fa-eye-slash");
+                iconEl.classList.add("fa-eye");
             }
         }
 
-        // Password strength and validation
         const passwordInput = document.getElementById("password");
+        const confirmInput = document.getElementById("confirm_password");
         const bar = document.getElementById("bar");
+        const matchError = document.getElementById("matchError");
 
         const hints = {
             length: document.getElementById("hint-length"),
@@ -476,11 +373,10 @@ text-decoration:underline;
             special: document.getElementById("hint-special")
         };
 
-        passwordInput.addEventListener("keyup", function() {
+        passwordInput.addEventListener("input", function() {
             const value = this.value;
             let strength = 0;
             
-            // Check requirements
             const checks = {
                 length: value.length >= 8,
                 upper: /[A-Z]/.test(value),
@@ -489,24 +385,44 @@ text-decoration:underline;
                 special: /[^A-Za-z0-9]/.test(value)
             };
             
-            // Update hints
             for (const [key, passed] of Object.entries(checks)) {
                 const el = hints[key];
+                const icon = el.querySelector('span');
                 if (passed) {
                     el.className = 'valid';
-                    el.textContent = el.textContent.replace('❌', '✅');
+                    if (icon) icon.textContent = '✅';
                     strength++;
                 } else {
                     el.className = 'invalid';
-                    el.textContent = el.textContent.replace('✅', '❌');
+                    if (icon) icon.textContent = '❌';
                 }
             }
             
-            // Update progress bar
             bar.style.width = (strength * 20) + '%';
             const colors = ['', '#ef4444', '#f59e0b', '#f59e0b', '#3b82f6', '#22c55e'];
             bar.style.background = colors[strength] || '#ef4444';
+
+            checkMatch();
         });
+
+        confirmInput.addEventListener("input", checkMatch);
+
+        function checkMatch() {
+            if (confirmInput.value && passwordInput.value !== confirmInput.value) {
+                matchError.style.display = 'block';
+            } else {
+                matchError.style.display = 'none';
+            }
+        }
+
+        function validatePasswords() {
+            if (passwordInput.value !== confirmInput.value) {
+                matchError.style.display = 'block';
+                confirmInput.focus();
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 </html>
